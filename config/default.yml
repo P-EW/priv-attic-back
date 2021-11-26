@@ -1,0 +1,15 @@
+server:
+  host: localhost
+  port: 3000
+  cors:
+    - "http://0.0.0.0:4200"
+    - "http://127.0.0.1:4200"
+    - "http://localhost:4200"
+swagger:
+  title: New Web's Technologies project with NestJS
+  description: School Project
+  version: 1.0
+  tag: users
+  path: documentation
+mongodb:
+  uri: mongodb://localhost:27017/nwt
