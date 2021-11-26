@@ -2,7 +2,6 @@
  * This script is to insert initial data inside the collection Compte of the database priv_attic
  * You can use it with mongo-shell or a tool like Robo3T
  */
-
 db.getCollection('users').insertMany([
   {
     image: 'https://randomuser.me/portraits/women/59.jpg',
@@ -43,5 +42,67 @@ db.getCollection('users').insertMany([
   },
 ]);
 
-// display the final initial data
-db.getCollection('users').find({});
+db.getCollection('posts').insertMany([
+  {
+    publisher: 'P-EW',
+    textContent: 'Bonsoir',
+    mediaContent:
+      'https://cdn.discordapp.com/attachments/909012057159008256/912497910724329542/unknown.png',
+    date: ISODate('2021-11-26T17:00:00.000Z'),
+    categories: ['Photo', 'Test'],
+  },
+  {
+    publisher: 'Ziak',
+    textContent: 'voici une très jolie photo de mon chat',
+    mediaContent:
+      'https://cdn.discordapp.com/attachments/909012057159008256/912487452273414175/unknown.png',
+    date: ISODate('2021-11-26T18:00:00.000Z'),
+    categories: ['Photo', 'Chat'],
+  },
+]);
+
+// Create an array with publisher element
+let posts = db
+  .getCollection('posts')
+  .find({})
+  .map(function (element) {
+    return {
+      _id: element._id,
+      publisher: element.publisher,
+    };
+  });
+
+let users = db
+  .getCollection('users')
+  .find({})
+  .map(function (element) {
+    return {
+      _id: element._id,
+      pseudo: element.pseudo,
+    };
+  });
+
+// For each element of the array ...
+posts.forEach(function (element) {
+  // ... check if we have a publisher
+  if (!!element.publisher) {
+    // try to get the related manager element inside the array
+    let publisher = users.find(function (elt) {
+      return elt.pseudo.toLowerCase() === element.publisher.toLowerCase();
+    });
+
+    // check if we found one
+    if (!!publisher) {
+      // update the post with the publisherId
+      db.getCollection('posts').updateOne(
+        { _id: element._id },
+        { $set: { publisherId: publisher._id } }
+      );
+      // remove the publisher field
+      db.getCollection('posts').updateOne(
+        { _id: element._id },
+        { $unset: { publisher } }
+      );
+    }
+  }
+});
