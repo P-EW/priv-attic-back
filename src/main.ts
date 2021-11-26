@@ -9,8 +9,13 @@ import * as Config from 'config';
 import { AppConfig, SwaggerConfig } from './app.types';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { UsersModule } from './users/users.module';
+import { PostsModule } from './posts/posts.module';
 
-async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
+async function bootstrap(
+  config: AppConfig,
+  swaggerUsersConfig: SwaggerConfig,
+  swaggerPostsConfig: SwaggerConfig,
+) {
   // create NestJS application
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
@@ -28,21 +33,9 @@ async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
     }),
   );
 
-  // create swagger options
-  const options = new DocumentBuilder()
-    .setTitle(swaggerConfig.title)
-    .setDescription(swaggerConfig.description)
-    .setVersion(swaggerConfig.version)
-    .addTag(swaggerConfig.tag)
-    .build();
-
-  // create swagger document
-  const usersDocument = SwaggerModule.createDocument(app, options, {
-    include: [UsersModule],
-  });
-
-  // setup swagger module
-  SwaggerModule.setup(swaggerConfig.path, app, usersDocument);
+  // create swaggy swaggers
+  _initializeSwagger(swaggerUsersConfig, app, UsersModule);
+  _initializeSwagger(swaggerPostsConfig, app, PostsModule);
 
   // launch server
   await app.listen(config.port, config.host);
@@ -52,7 +45,34 @@ async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
   );
 }
 
+const _initializeSwagger = (
+  swaggerConfig: SwaggerConfig,
+  app: NestFastifyApplication,
+  module: any,
+) => {
+  // create swagger options
+  const options = new DocumentBuilder()
+    .setTitle(swaggerConfig.title)
+    .setDescription(swaggerConfig.description)
+    .setVersion(swaggerConfig.version)
+    .addTag(swaggerConfig.tag)
+    .build();
+
+  // create swagger document
+  const document = SwaggerModule.createDocument(app, options, {
+    include: [module],
+  });
+
+  // setup swagger module
+  SwaggerModule.setup(
+    swaggerConfig.path + '/' + swaggerConfig.tag,
+    app,
+    document,
+  );
+};
+
 bootstrap(
   Config.get<AppConfig>('server'),
-  Config.get<SwaggerConfig>('swagger'),
+  Config.get<SwaggerConfig>('swaggerUsers'),
+  Config.get<SwaggerConfig>('swaggerPosts'),
 );
