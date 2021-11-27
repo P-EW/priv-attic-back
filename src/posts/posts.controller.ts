@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   UseInterceptors,
 } from '@nestjs/common';
 import {
@@ -25,6 +26,7 @@ import { PostEntity } from './entities/post.entity';
 import { Observable } from 'rxjs';
 import { HandlerParams } from './validators/handler-params';
 import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Controller('posts')
 @ApiTags('posts')
@@ -104,5 +106,44 @@ export class PostsController {
   @Post()
   create(@Body() createPostDto: CreatePostDto): Observable<PostEntity> {
     return this._postsService.create(createPostDto);
+  }
+
+  /**
+   * Handler to answer to PUT /posts/:id route
+   *
+   * @param {HandlerParams} params list of route params to take post id
+   * @param updatePostDto data to update
+   *
+   * @returns Observable<PostEntity>
+   */
+  @ApiOkResponse({
+    description: 'The post has been successfully updated',
+    type: PostEntity,
+  })
+  @ApiNotFoundResponse({
+    description: 'Post with the given "id" doesn\'t exist in the database',
+  })
+  @ApiConflictResponse({
+    description: 'The post already exists in the database',
+  })
+  @ApiBadRequestResponse({
+    description: 'Parameter and/or payload provided are not good',
+  })
+  @ApiUnprocessableEntityResponse({
+    description: "The request can't be performed in the database",
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Unique identifier of the post in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @ApiBody({ description: 'Payload to update a person', type: UpdatePostDto })
+  @Put(':id')
+  update(
+    @Param() params: HandlerParams,
+    @Body() updatePostDto: UpdatePostDto,
+  ): Observable<PostEntity> {
+    return this._postsService.update(params.id, updatePostDto);
   }
 }

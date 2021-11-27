@@ -5,6 +5,7 @@ import { Post, PostDocument } from '../schemas/post.schema';
 import { defaultIfEmpty, from, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { CreatePostDto } from '../dto/create-post.dto';
+import { UpdatePostDto } from '../dto/update-post.dto';
 
 @Injectable()
 export class PostsDao {
@@ -54,5 +55,28 @@ export class PostsDao {
   save = (post: CreatePostDto): Observable<Post> =>
     from(new this._postModel(post).save()).pipe(
       map((doc: PostDocument) => doc.toJSON()),
+    );
+
+  /**
+   * Update a post in posts list
+   *
+   * @param {string} id
+   * @param {UpdatePostDto} post
+   *
+   * @return {Observable<Post | void>}
+   */
+  findByIdAndUpdate = (
+    id: string,
+    post: UpdatePostDto,
+  ): Observable<Post | void> =>
+    from(
+      this._postModel.findByIdAndUpdate(id, post, {
+        new: true,
+        runValidators: true,
+      }),
+    ).pipe(
+      filter((doc: PostDocument) => !!doc),
+      map((doc: PostDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
     );
 }

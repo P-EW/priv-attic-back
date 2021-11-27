@@ -1,5 +1,4 @@
 import {
-  ConflictException,
   Injectable,
   NotFoundException,
   UnprocessableEntityException,
@@ -10,6 +9,7 @@ import { Post } from './schemas/post.schema';
 import { PostEntity } from './entities/post.entity';
 import { filter, map, mergeMap } from 'rxjs/operators';
 import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -63,7 +63,32 @@ export class PostsService {
   create = (post: CreatePostDto): Observable<PostEntity> =>
     this._addPost(post).pipe(
       mergeMap((_: CreatePostDto) => this._postsDao.save(_)),
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
       map((_: Post) => new PostEntity(_)),
+    );
+
+  /**
+   * Update a post in posts list
+   *
+   * @param {string} id of the post to update
+   * @param post data to update
+   *
+   * @returns {Observable<PostEntity>}
+   */
+  update = (id: string, post: UpdatePostDto): Observable<PostEntity> =>
+    this._postsDao.findByIdAndUpdate(id, post).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: Post) =>
+        !!_
+          ? of(new PostEntity(_))
+          : throwError(
+              () => new NotFoundException(`Post with id '${id}' not found`),
+            ),
+      ),
     );
 
   /**
