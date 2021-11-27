@@ -79,4 +79,18 @@ export class PostsDao {
       map((doc: PostDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),
     );
+
+  /**
+   * Delete a post in posts list
+   *
+   * @param {string} id
+   *
+   * @return {Observable<Post | void>}
+   */
+  findByIdAndRemove = (id: string): Observable<Post | void> =>
+    from(this._postModel.findByIdAndRemove(id)).pipe(
+      filter((doc: PostDocument) => !!doc),
+      map((doc: PostDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
+    );
 }

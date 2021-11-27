@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -145,5 +146,33 @@ export class PostsController {
     @Body() updatePostDto: UpdatePostDto,
   ): Observable<PostEntity> {
     return this._postsService.update(params.id, updatePostDto);
+  }
+
+  /**
+   * Handler to answer to DELETE /posts/:id route
+   *
+   * @param {HandlerParams} params list of route params to take post id
+   *
+   * @returns Observable<void>
+   */
+  @ApiNoContentResponse({
+    description: 'The post has been successfully deleted',
+  })
+  @ApiNotFoundResponse({
+    description: 'Post with the given "id" doesn\'t exist in the database',
+  })
+  @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
+  @ApiUnprocessableEntityResponse({
+    description: "The request can't be performed in the database",
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Unique identifier of the post in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @Delete(':id')
+  delete(@Param() params: HandlerParams): Observable<void> {
+    return this._postsService.delete(params.id);
   }
 }

@@ -105,4 +105,25 @@ export class PostsService {
       ...post,
       date: Date.now(),
     });
+
+  /**
+   * Deletes one post in posts list
+   *
+   * @param {string} id of the post to delete
+   *
+   * @returns {Observable<void>}
+   */
+  delete = (id: string): Observable<void> =>
+    this._postsDao.findByIdAndRemove(id).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: Post) =>
+        !!_
+          ? of(undefined)
+          : throwError(
+              () => new NotFoundException(`Post with id '${id}' not found`),
+            ),
+      ),
+    );
 }
