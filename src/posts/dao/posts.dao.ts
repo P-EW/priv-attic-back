@@ -32,6 +32,29 @@ export class PostsDao {
     );
 
   /**
+   * Call mongoose method, call toJSON on each result and returns PostModel[] or undefined
+   *
+   * @return {Observable<Post[] | void>}
+   */
+  findPostsByPseudo = (pseudo: string): Observable<Post[] | void> =>
+    from(
+      this._postModel.aggregate([
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'publisherId',
+            foreignField: '_id',
+            as: 'publisher',
+          },
+        },
+        { $match: { 'publisher.pseudo': { $regex: pseudo, $options: 'i' } } },
+        { $unset: 'publisher' },
+      ]),
+    ).pipe(
+      filter((docs: PostDocument[]) => !!docs && docs.length > 0),
+      defaultIfEmpty(undefined),
+    );
+  /**
    * Returns one post of the list matching id in parameter
    *
    * @param {string} id of the post in the db

@@ -33,6 +33,18 @@ export class PostsService {
     );
 
   /**
+   * Returns all existing posts linked to the user in the list
+   *
+   * @returns {Observable<PostEntity[] | void>}
+   */
+  findAllPostsFromPseudo = (pseudo: string): Observable<PostEntity[] | void> =>
+    this._postsDao.findPostsByPseudo(pseudo).pipe(
+      filter((_: Post[]) => !!_),
+      map((_: Post[]) => _.map((__: Post) => new PostEntity(__))),
+      defaultIfEmpty(undefined),
+    );
+
+  /**
    * Returns one post of the list matching id in parameter
    *
    * @param {string} id of the post

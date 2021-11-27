@@ -28,6 +28,7 @@ import { Observable } from 'rxjs';
 import { HandlerParams } from './validators/handler-params';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { HandlerPseudo } from './validators/handler-pseudo';
 
 @Controller('posts')
 @ApiTags('posts')
@@ -54,6 +55,30 @@ export class PostsController {
   @Get()
   findAll(): Observable<PostEntity[] | void> {
     return this._postsService.findAll();
+  }
+
+  /**
+   * Handler to answer to GET /posts route
+   *
+   * @returns Observable<PostEntity[] | void>
+   */
+  @ApiOkResponse({
+    description: 'Returns an array of posts',
+    type: PostEntity,
+    isArray: true,
+  })
+  @ApiNoContentResponse({ description: 'No post exists in database' })
+  @ApiParam({
+    name: 'pseudo',
+    description: 'Unique identifier of the user in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @Get('from/:pseudo')
+  findAllPostsFromPseudo(
+    @Param() params: HandlerPseudo,
+  ): Observable<PostEntity[] | void> {
+    return this._postsService.findAllPostsFromPseudo(params.pseudo);
   }
 
   /**
