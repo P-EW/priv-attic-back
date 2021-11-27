@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument } from '../schemas/post.schema';
 import { defaultIfEmpty, from, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { CreatePostDto } from '../dto/create-post.dto';
 
 @Injectable()
 export class PostsDao {
@@ -41,5 +42,17 @@ export class PostsDao {
       filter((doc: PostDocument) => !!doc),
       map((doc: PostDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),
+    );
+
+  /**
+   * Check if post already exists with index and add it in posts list
+   *
+   * @param {CreatePostDto} post to create
+   *
+   * @return {Observable<Post>}
+   */
+  save = (post: CreatePostDto): Observable<Post> =>
+    from(new this._postModel(post).save()).pipe(
+      map((doc: PostDocument) => doc.toJSON()),
     );
 }

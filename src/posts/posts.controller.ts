@@ -1,12 +1,17 @@
 import {
+  Body,
   ClassSerializerInterceptor,
   Controller,
   Get,
   Param,
+  Post,
   UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBody,
+  ApiConflictResponse,
+  ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -19,6 +24,7 @@ import { PostsService } from './posts.service';
 import { PostEntity } from './entities/post.entity';
 import { Observable } from 'rxjs';
 import { HandlerParams } from './validators/handler-params';
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Controller('posts')
 @ApiTags('posts')
@@ -74,5 +80,29 @@ export class PostsController {
   @Get(':id')
   findOne(@Param() params: HandlerParams): Observable<PostEntity> {
     return this._postsService.findOne(params.id);
+  }
+
+  /**
+   * Handler to answer to POST /post route
+   *
+   * @param createPostDto data to create
+   *
+   * @returns Observable<PostEntity>
+   */
+  @ApiCreatedResponse({
+    description: 'The post has been successfully created',
+    type: PostEntity,
+  })
+  @ApiBadRequestResponse({ description: 'Payload provided is not good' })
+  @ApiUnprocessableEntityResponse({
+    description: "The request can't be performed in the database",
+  })
+  @ApiBody({
+    description: 'Payload to create a new post',
+    type: CreatePostDto,
+  })
+  @Post()
+  create(@Body() createPostDto: CreatePostDto): Observable<PostEntity> {
+    return this._postsService.create(createPostDto);
   }
 }

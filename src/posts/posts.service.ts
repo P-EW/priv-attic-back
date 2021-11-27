@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
   UnprocessableEntityException,
@@ -8,6 +9,7 @@ import { catchError, defaultIfEmpty, Observable, of, throwError } from 'rxjs';
 import { Post } from './schemas/post.schema';
 import { PostEntity } from './entities/post.entity';
 import { filter, map, mergeMap } from 'rxjs/operators';
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -50,4 +52,32 @@ export class PostsService {
             ),
       ),
     );
+
+  /**
+   * Check if post already exists and add it in posts list
+   *
+   * @param post to create
+   *
+   * @returns {Observable<PostEntity>}
+   */
+  create = (post: CreatePostDto): Observable<PostEntity> =>
+    this._addPost(post).pipe(
+      mergeMap((_: CreatePostDto) => this._postsDao.save(_)),
+      map((_: Post) => new PostEntity(_)),
+    );
+
+  /**
+   * Add post with good data in posts list
+   *
+   * @param post to add
+   *
+   * @returns {Observable<CreatePostDto>}
+   *
+   * @private
+   */
+  private _addPost = (post: CreatePostDto): Observable<CreatePostDto> =>
+    of({
+      ...post,
+      date: Date.now(),
+    });
 }

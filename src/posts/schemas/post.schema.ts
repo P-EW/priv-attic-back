@@ -1,9 +1,15 @@
 import * as mongoose from 'mongoose';
 import { Document } from 'mongoose';
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export type PostDocument = Post & Document;
 
+@Schema({
+  toJSON: {
+    virtuals: true,
+  },
+  versionKey: false,
+})
 export class Post {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
@@ -15,13 +21,13 @@ export class Post {
     type: String,
     trim: true,
   })
-  textContent: string;
+  textContent?: string;
 
   @Prop({
     type: String,
     trim: true,
   })
-  mediaContent: string;
+  mediaContent?: string;
 
   @Prop({
     type: Date,
@@ -30,12 +36,10 @@ export class Post {
   date: number;
 
   @Prop({
-    set: (val: string[]) => val.join(' '),
-    get: (val: string) => val.split(' '),
-    type: String,
+    type: Array,
     trim: true,
   })
-  categories: string[];
+  categories?: string[];
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,

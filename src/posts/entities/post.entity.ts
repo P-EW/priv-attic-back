@@ -4,13 +4,13 @@ import { ApiProperty } from '@nestjs/swagger';
 @Exclude()
 export class PostEntity {
   @ApiProperty({
-    name: 'id',
+    name: '_id',
     description: 'Unique identifier in the database',
     example: '61a14015645ee1c3b3b8c316',
   })
   @Expose()
   @Type(() => String)
-  id: string;
+  _id: string;
 
   @ApiProperty({
     name: 'textContent',
@@ -19,16 +19,15 @@ export class PostEntity {
   })
   @Expose()
   @Type(() => String)
-  textContent: string;
+  textContent?: string;
 
   @ApiProperty({
     name: 'mediaContent',
     description: "The url of the post's media content",
-    example: 'Lorem ipsum dolor sit amet',
   })
   @Expose()
   @Type(() => String)
-  mediaContent: string;
+  mediaContent?: string;
 
   @ApiProperty({
     name: 'date',
@@ -42,11 +41,20 @@ export class PostEntity {
   @ApiProperty({
     name: 'categories',
     description: "The post's categories",
-    example: 'Dog, Cat, Meme...',
+    example: '["Dog", "Cat", "Meme"]',
+  })
+  @Expose()
+  @Type(() => Array)
+  categories?: string[];
+
+  @ApiProperty({
+    name: 'publisherId',
+    description: 'Unique identifier of the publisher in the database',
+    example: '61a14015645ee1c3b3b8c316',
   })
   @Expose()
   @Type(() => String)
-  categories: string[];
+  publisherId: string;
 
   /**
    * Class constructor
