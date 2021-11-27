@@ -1,9 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { PostsDao } from './dao/posts.dao';
-import { defaultIfEmpty, Observable } from 'rxjs';
+import { catchError, defaultIfEmpty, Observable, of, throwError } from 'rxjs';
 import { Post } from './schemas/post.schema';
 import { PostEntity } from './entities/post.entity';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, mergeMap } from 'rxjs/operators';
 
 @Injectable()
 export class PostsService {
@@ -24,5 +28,26 @@ export class PostsService {
       filter((_: Post[]) => !!_),
       map((_: Post[]) => _.map((__: Post) => new PostEntity(__))),
       defaultIfEmpty(undefined),
+    );
+
+  /**
+   * Returns one post of the list matching id in parameter
+   *
+   * @param {string} id of the post
+   *
+   * @returns {Observable<PostEntity>}
+   */
+  findOne = (id: string): Observable<PostEntity> =>
+    this._postsDao.findById(id).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: Post) =>
+        !!_
+          ? of(new PostEntity(_))
+          : throwError(
+              () => new NotFoundException(`Post with id '${id}' not found`),
+            ),
+      ),
     );
 }

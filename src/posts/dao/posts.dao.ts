@@ -28,4 +28,18 @@ export class PostsDao {
       map((docs: PostDocument[]) => docs.map((_: PostDocument) => _.toJSON())),
       defaultIfEmpty(undefined),
     );
+
+  /**
+   * Returns one post of the list matching id in parameter
+   *
+   * @param {string} id of the post in the db
+   *
+   * @return {Observable<Post | void>}
+   */
+  findById = (id: string): Observable<Post | void> =>
+    from(this._postModel.findById(id)).pipe(
+      filter((doc: PostDocument) => !!doc),
+      map((doc: PostDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
+    );
 }
