@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+
 import { Model } from 'mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
+import { InjectModel } from '@nestjs/mongoose';
 import { defaultIfEmpty, from, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { CreateUserDto } from '../dto/create-user.dto';
+
 @Injectable()
 export class UsersDao {
   /**
@@ -23,4 +26,15 @@ export class UsersDao {
       defaultIfEmpty(undefined),
     );
   }
+
+  /**
+   *  Check if user already exists with index and add it in users list
+   * @param {CreateUserDto } user to create
+   *
+   * @return {Observable<User>}
+   */
+  save = (user: CreateUserDto): Observable<any> =>
+    from(new this._userModel(user).save()).pipe(
+      map((doc: UserDocument) => doc.toJSON()),
+    );
 }
