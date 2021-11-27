@@ -46,21 +46,12 @@ export class UsersService {
     );
   }
 
-  private _addUser = (person: CreateUserDto): Observable<CreateUserDto> =>
-    of({
-      ...person,
-      birthDate: this._parseDate('06/05/1985'),
-    });
-
-  hashPassWord(pth: string): any {
-    return { password: bcrypt.hashSync(pth, 10) };
-  }
   /**
    * Check if person already exists and add it in user list
    *
-   * @param person to create
+   * @param user to create
    *
-   * @returns {Observable<PersonEntity>}
+   * @returns {Observable<UserEntity>}
    */
   create = (user: CreateUserDto): Observable<UserEntity> =>
     this._addUser(user).pipe(
@@ -78,6 +69,32 @@ export class UsersService {
       ),
       map((_: User) => new UserEntity(_)),
     );
+
+  delete(pseudo: string): Observable<void> {
+    return this._usersDao.findByPseudoAndRemove(pseudo).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((u: User) =>
+        !!u
+          ? of(undefined)
+          : throwError(
+              () =>
+                new NotFoundException(`User with pseudo "${pseudo}" not found`),
+            ),
+      ),
+    );
+  }
+
+  private _addUser = (person: CreateUserDto): Observable<CreateUserDto> =>
+    of({
+      ...person,
+      birthDate: this._parseDate('06/05/1985'),
+    });
+
+  hashPassWord(pth: string): any {
+    return { password: bcrypt.hashSync(pth, 10) };
+  }
 
   private _parseDate = (date: string): number => {
     const dates = date.split('/');

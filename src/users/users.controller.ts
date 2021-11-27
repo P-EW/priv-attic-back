@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
@@ -30,6 +31,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { ConnectUserDto } from './dto/connect-user.dto';
 import { TokenEntity } from './entities/token.entity';
 import { AuthService } from '../auth/auth.service';
+import { JwtAuthGuard } from '../auth/jwt.strategy';
 
 @ApiTags('users')
 @Controller('users')
@@ -80,5 +82,34 @@ export class UsersController {
   @Post('register')
   create(@Body() createUserDto: CreateUserDto): Observable<UserEntity | void> {
     return this._userService.create(createUserDto);
+  }
+
+  /**
+   * Handler to answer to DELETE /users/:pseudo route
+   *
+   * @param {HandlerParams} params list of route params to take user pseudo
+   *
+   * @returns Observable<void>
+   */
+  @ApiNoContentResponse({
+    description: 'The user has been successfully deleted',
+  })
+  @ApiNotFoundResponse({
+    description: 'User with the given "pseudo" doesn\'t exist in the database',
+  })
+  @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
+  @ApiUnprocessableEntityResponse({
+    description: "The request can't be performed in the database",
+  })
+  @ApiParam({
+    name: 'pseudo',
+    description: 'Unique identifier of the person in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @Delete(':pseudo')
+  @UseGuards(JwtAuthGuard)
+  delete(@Param() params: HandlerParams): Observable<void> {
+    return this._userService.delete(params.pseudo);
   }
 }

@@ -17,6 +17,13 @@ export class UsersDao {
     private readonly _userModel: Model<UserDocument>,
   ) {}
 
+  /**
+   * Returns one user of the list matching pseudo in parameter
+   *
+   * @param {string} pseudo of the user in the db
+   *
+   * @return {Observable<User | void>}
+   */
   findByPseudo(pseudo: string): Observable<User | void> {
     return from(
       this._userModel.findOne({ pseudo: { $regex: pseudo, $options: 'i' } }),
@@ -37,4 +44,21 @@ export class UsersDao {
     from(new this._userModel(user).save()).pipe(
       map((doc: UserDocument) => doc.toJSON()),
     );
+
+  /**
+   *  Delete a user in users list
+   *  @param {string} pseudo
+   *  @return {Observable<User | void>}
+   */
+  findByPseudoAndRemove(pseudo: string): Observable<User | void> {
+    return from(
+      this._userModel.findOneAndRemove({
+        pseudo: { $regex: pseudo, $options: 'i' },
+      }),
+    ).pipe(
+      filter((doc: UserDocument) => !!doc),
+      map((doc: UserDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
+    );
+  }
 }
