@@ -54,7 +54,7 @@ export class PostsDao {
       ]),
     ).pipe(
       filter((docs: PostDocument[]) => !!docs && docs.length > 0),
-      map((docs: PostDocument[]) => docs.map((_: PostDocument) => _.toJSON())),
+      map((docs: PostDocument[]) => docs.map((_: PostDocument) => _)),
       defaultIfEmpty(undefined),
     );
 

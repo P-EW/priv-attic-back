@@ -27,7 +27,7 @@ db.getCollection('users').insertMany([
   {
     image: 'https://randomuser.me/portraits/women/59.jpg',
     pseudo: 'P-EW',
-    firstname: 'Paul-Emille',
+    firstname: 'Paul-Emile',
     lastname: 'Watelot',
     email: 'PE.1@gmail.com',
     birthDate: ISODate('1996-03-05T23:00:00.000Z'),
