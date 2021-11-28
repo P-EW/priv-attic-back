@@ -19,7 +19,8 @@ export class CommentsDao {
    * @return {Observable<Comment[] | void>}
    */
   findCommentsByPost(postId: string): Observable<Comment[] | void> {
-    return from(this._commentModel.find({ $match: { postId: postId } })).pipe(
+    console.log(postId);
+    return from(this._commentModel.find({ postId: postId })).pipe(
       filter((docs: CommentDocument[]) => !!docs && docs.length > 0),
       map((docs: CommentDocument[]) =>
         docs.map((_: CommentDocument) => _.toJSON()),
