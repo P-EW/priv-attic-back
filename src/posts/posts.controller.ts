@@ -8,6 +8,7 @@ import {
   Post,
   Patch,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -30,6 +31,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { HandlerPseudo } from './validators/handler-pseudo';
 import { HandlerCategories } from './validators/handler-categories';
+import { JwtAuthGuard } from '../auth/jwt.strategy';
 
 @Controller('posts')
 @ApiTags('posts')
@@ -161,6 +163,7 @@ export class PostsController {
     type: CreatePostDto,
   })
   @Post()
+  @UseGuards(JwtAuthGuard)
   create(@Body() createPostDto: CreatePostDto): Observable<PostEntity> {
     return this._postsService.create(createPostDto);
   }
@@ -197,6 +200,7 @@ export class PostsController {
   })
   @ApiBody({ description: 'Payload to update a person', type: UpdatePostDto })
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   update(
     @Param() params: HandlerParams,
     @Body() updatePostDto: UpdatePostDto,
@@ -228,6 +232,7 @@ export class PostsController {
     allowEmptyValue: false,
   })
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   delete(@Param() params: HandlerParams): Observable<void> {
     return this._postsService.delete(params.id);
   }
