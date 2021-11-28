@@ -10,11 +10,13 @@ import { AppConfig, SwaggerConfig } from './app.types';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
+import { AuthModule } from './auth/auth.module';
 
 async function bootstrap(
   config: AppConfig,
   swaggerUsersConfig: SwaggerConfig,
   swaggerPostsConfig: SwaggerConfig,
+  swaggerAuthConfig: SwaggerConfig,
 ) {
   // create NestJS application
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -36,6 +38,7 @@ async function bootstrap(
   // create swaggy swaggers
   _initializeSwagger(swaggerUsersConfig, app, UsersModule);
   _initializeSwagger(swaggerPostsConfig, app, PostsModule);
+  _initializeSwagger(swaggerAuthConfig, app, AuthModule);
 
   // launch server
   await app.listen(config.port, config.host);
@@ -75,4 +78,5 @@ bootstrap(
   Config.get<AppConfig>('server'),
   Config.get<SwaggerConfig>('swaggerUsers'),
   Config.get<SwaggerConfig>('swaggerPosts'),
+  Config.get<SwaggerConfig>('swaggerAuth'),
 );

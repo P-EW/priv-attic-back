@@ -32,6 +32,9 @@ export class User {
     required: true,
     minlength: 2,
     trim: true,
+    collation: {
+      strength: 2,
+    },
   })
   pseudo: string;
 
@@ -81,7 +84,7 @@ export class User {
     raw({
       title: {
         type: String,
-        required: true,
+        required: false,
       },
       content: {
         type: String,
@@ -89,5 +92,11 @@ export class User {
     }),
   )
   motto: any;
+
+  @Prop({
+    type: String,
+    required: true,
+  })
+  password: string;
 }
 export const UserSchema = SchemaFactory.createForClass(User);
