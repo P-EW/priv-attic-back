@@ -16,7 +16,6 @@ import {
   ApiBadRequestResponse,
   ApiBody,
   ApiConflictResponse,
-  ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -28,10 +27,8 @@ import { HttpInterceptor } from '../interceptors/http.interceptor';
 import { UsersService } from './users.service';
 import { UserEntity } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ConnectUserDto } from './dto/connect-user.dto';
-import { TokenEntity } from './entities/token.entity';
-import { AuthService } from '../auth/auth.service';
 import { JwtAuthGuard } from '../auth/jwt.strategy';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -111,5 +108,45 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   delete(@Param() params: HandlerParams): Observable<void> {
     return this._userService.delete(params.pseudo);
+  }
+
+  /**
+   * Handler to answer to PUT /people/:id route
+   *
+   * @param {HandlerParams} params list of route params to take person id
+   * @param updatePersonDto data to update
+   *
+   * @returns Observable<PersonEntity>
+   */
+  @ApiOkResponse({
+    description: 'The person has been successfully updated',
+    type: UserEntity,
+  })
+  @ApiNotFoundResponse({
+    description: 'Person with the given "id" doesn\'t exist in the database',
+  })
+  @ApiConflictResponse({
+    description: 'The person already exists in the database',
+  })
+  @ApiBadRequestResponse({
+    description: 'Parameter and/or payload provided are not good',
+  })
+  @ApiUnprocessableEntityResponse({
+    description: "The request can't be performed in the database",
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Unique identifier of the person in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @ApiBody({ description: 'Payload to update a person', type: UpdateUserDto })
+  @UseGuards(JwtAuthGuard)
+  @Put(':id')
+  update(
+    @Param() params: HandlerParams,
+    @Body() updatePersonDto: UpdateUserDto,
+  ): Observable<UserEntity> {
+    return this._userService.update(params.pseudo, updatePersonDto);
   }
 }

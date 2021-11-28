@@ -6,6 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { defaultIfEmpty, from, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { CreateUserDto } from '../dto/create-user.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
 
 @Injectable()
 export class UsersDao {
@@ -60,5 +61,17 @@ export class UsersDao {
       map((doc: UserDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),
     );
+  }
+
+  findByPseudoAndUpdate(
+    pseudo: string,
+    user: UpdateUserDto,
+  ): Observable<any | void> {
+    return from(
+      this._userModel.findByIdAndUpdate({ pseudo: pseudo }, user, {
+        new: true,
+        runValidators: true,
+      }),
+    ).pipe(map((u) => (!!u ? u.toJSON() : undefined)));
   }
 }
