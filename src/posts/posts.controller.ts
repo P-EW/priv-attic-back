@@ -68,6 +68,7 @@ export class PostsController {
     type: PostEntity,
     isArray: true,
   })
+  @ApiNoContentResponse({ description: 'No post exists in database' })
   @ApiNotFoundResponse({
     description: 'Post with the given "pseudo" doesn\'t exist in the database',
   })
@@ -124,6 +125,9 @@ export class PostsController {
     isArray: true,
   })
   @ApiNoContentResponse({ description: 'No post exists in database' })
+  @ApiNotFoundResponse({
+    description: "Post with the given categs doesn't exist in the database",
+  })
   @ApiParam({
     name: 'categories',
     description: "Array of string matching Post's categories in the database",

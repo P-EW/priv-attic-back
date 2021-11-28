@@ -87,8 +87,17 @@ export class PostsService {
     categs: string[],
   ): Observable<PostEntity[] | void> =>
     this._postsDao.findByCategs(categs).pipe(
-      filter((_: Post[]) => !!_),
-      map((_: Post[]) => _.map((__: Post) => new PostEntity(__))),
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: Post[]) =>
+        !!_
+          ? of(_.map((__: Post) => new PostEntity(__)))
+          : throwError(
+              () =>
+                new NotFoundException(`Post with categs '${categs}' not found`),
+            ),
+      ),
       defaultIfEmpty(undefined),
     );
 
