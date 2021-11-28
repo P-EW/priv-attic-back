@@ -17,6 +17,7 @@ export class UserEntity {
     name: 'photo',
     description: 'Photo URL',
     example: 'https://randomuser.me/portraits/men/55.jpg',
+    pattern: ' /([a-z\\-_0-9\\/\\:\\.]*\\.(jpg|jpeg|png|gif))/i',
   })
   @Expose()
   @Type(() => String)

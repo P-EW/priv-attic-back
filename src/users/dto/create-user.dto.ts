@@ -5,14 +5,9 @@ import {
   IsString,
   MinLength,
   IsBoolean,
-  IsNumber,
-  IsOptional,
-  IsInstance,
-  ValidateNested,
 } from 'class-validator';
-import { Expose, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserMottoDto } from './user-motto.dto';
 import { Prop } from '@nestjs/mongoose';
 
 export class CreateUserDto {
@@ -63,10 +58,10 @@ export class CreateUserDto {
   @ApiProperty({
     name: 'birthDate',
     description: 'Birthdate in timestamp format',
-    example: '101343600000',
+    example: '23/04/1998',
   })
   @Type(() => Number)
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
   birthDate: number;
 

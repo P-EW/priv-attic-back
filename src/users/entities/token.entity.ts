@@ -19,10 +19,10 @@ export class TokenEntity {
   expiry: number;
 
   @ApiProperty({
-    name: 'pseudo',
-    description: 'pseudo of user',
-    example: 'ziak',
+    name: 'id',
+    description: 'id of user',
+    example: 'iddzqpkdDQZDQZDDs',
   })
   @Type(() => String)
-  pseudo: string;
+  id: string;
 }

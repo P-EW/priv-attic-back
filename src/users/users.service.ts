@@ -47,7 +47,7 @@ export class UsersService {
    * @returns {Observable<UserEntity>}
    */
   create = (user: CreateUserDto): Observable<UserEntity | void> =>
-    this._addUser(user).pipe(
+    of(user).pipe(
       map((user) => Object.assign(user, this.hashPassWord(user.password))),
       mergeMap((_: CreateUserDto) => this._usersDao.save(_)),
       catchError((e) =>
@@ -81,7 +81,9 @@ export class UsersService {
 
   update(pseudo: string, user: UpdateUserDto): Observable<UserEntity> {
     return of(user).pipe(
-      map((user) => Object.assign(user, this.hashPassWord(user.password))),
+      map((u) =>
+        u?.password ? Object.assign(u, this.hashPassWord(u.password)) : u,
+      ),
       mergeMap((user) =>
         this._usersDao.findByPseudoAndUpdate(pseudo, user).pipe(
           catchError((e) =>
@@ -104,18 +106,7 @@ export class UsersService {
     );
   }
 
-  private _addUser = (person: CreateUserDto): Observable<CreateUserDto> =>
-    of({
-      ...person,
-      birthDate: this._parseDate('06/05/1985'),
-    });
-
   hashPassWord(pth: string): any {
     return { password: bcrypt.hashSync(pth, 10) };
   }
-
-  private _parseDate = (date: string): number => {
-    const dates = date.split('/');
-    return new Date(dates[2] + '/' + dates[1] + '/' + dates[0]).getTime();
-  };
 }

@@ -5,8 +5,8 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -135,14 +135,14 @@ export class UsersController {
     description: "The request can't be performed in the database",
   })
   @ApiParam({
-    name: 'id',
-    description: 'Unique identifier of the person in the database',
+    name: 'pseudo',
+    description: 'Unique pseudo of the user in the database',
     type: String,
     allowEmptyValue: false,
   })
-  @ApiBody({ description: 'Payload to update a person', type: UpdateUserDto })
-  @UseGuards(JwtAuthGuard)
-  @Put(':id')
+  @ApiBody({ description: 'Payload to update a user', type: UpdateUserDto })
+  //@UseGuards(JwtAuthGuard)
+  @Patch(':pseudo')
   update(
     @Param() params: HandlerParams,
     @Body() updatePersonDto: UpdateUserDto,
