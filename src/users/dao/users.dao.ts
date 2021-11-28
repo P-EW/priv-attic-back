@@ -36,6 +36,20 @@ export class UsersDao {
   }
 
   /**
+   * Returns one user of the list matching id in parameter
+   *
+   * @param {string} id of the user in the db
+   *
+   * @return {Observable<User | void>}
+   */
+  findById = (id: string): Observable<User | void> =>
+    from(this._userModel.findById(id)).pipe(
+      filter((doc: UserDocument) => !!doc),
+      map((doc: UserDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
+    );
+
+  /**
    *  Check if user already exists with index and add it in users list
    * @param {CreateUserDto } user to create
    *

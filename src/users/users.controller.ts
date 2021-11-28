@@ -29,6 +29,7 @@ import { UserEntity } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from '../auth/jwt.strategy';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { HandlerId } from './validators/handler-id';
 
 @ApiTags('users')
 @Controller('users')
@@ -62,6 +63,36 @@ export class UsersController {
   findOne(@Param() params: HandlerParams): Observable<UserEntity | void> {
     return this._userService.findOnePseudo(params.pseudo);
   }
+
+  /**
+   * Handler to answer to GET /users/user/:id route
+   *
+   * @param {HandlerParams} params list of route params to take user id
+   *
+   * @returns Observable<UserEntity>
+   */
+  @ApiOkResponse({
+    description: 'Returns the user for the given "id"',
+    type: UserEntity,
+  })
+  @ApiNotFoundResponse({
+    description: 'User with the given "id" doesn\'t exist in the database',
+  })
+  @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
+  @ApiUnprocessableEntityResponse({
+    description: "The request can't be performed in the database",
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Unique identifier of the user in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @Get('user/:id')
+  findOneById(@Param() params: HandlerId): Observable<UserEntity> {
+    return this._userService.findOne(params.id);
+  }
+
   /**
    * Handler to answer to POST /people route
    *

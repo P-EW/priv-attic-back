@@ -40,6 +40,27 @@ export class UsersService {
   }
 
   /**
+   * Returns one user of the list matching id in parameter
+   *
+   * @param {string} id of the user
+   *
+   * @returns {Observable<UserEntity>}
+   */
+  findOne = (id: string): Observable<UserEntity> =>
+    this._usersDao.findById(id).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: User) =>
+        !!_
+          ? of(new UserEntity(_))
+          : throwError(
+              () => new NotFoundException(`User with id '${id}' not found`),
+            ),
+      ),
+    );
+
+  /**
    * Check if person already exists and add it in user list
    *
    * @param user to create
