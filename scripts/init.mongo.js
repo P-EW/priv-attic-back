@@ -61,6 +61,10 @@ db.getCollection('posts').insertMany([
   },
 ]);
 
+
+
+
+
 // Create an array with publisher element
 let posts = db
   .getCollection('posts')

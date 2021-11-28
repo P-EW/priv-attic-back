@@ -172,7 +172,7 @@ export class UsersController {
     allowEmptyValue: false,
   })
   @ApiBody({ description: 'Payload to update a user', type: UpdateUserDto })
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Patch(':pseudo')
   update(
     @Param() params: HandlerParams,
