@@ -48,6 +48,14 @@ async function bootstrap(
   );
 }
 
+bootstrap(
+  Config.get<AppConfig>('server'),
+  Config.get<SwaggerConfig>('swaggerUsers'),
+  Config.get<SwaggerConfig>('swaggerPosts'),
+  Config.get<SwaggerConfig>('swaggerAuth'),
+
+);
+
 const _initializeSwagger = (
   swaggerConfig: SwaggerConfig,
   app: NestFastifyApplication,
@@ -73,10 +81,3 @@ const _initializeSwagger = (
     document,
   );
 };
-
-bootstrap(
-  Config.get<AppConfig>('server'),
-  Config.get<SwaggerConfig>('swaggerUsers'),
-  Config.get<SwaggerConfig>('swaggerPosts'),
-  Config.get<SwaggerConfig>('swaggerAuth'),
-);

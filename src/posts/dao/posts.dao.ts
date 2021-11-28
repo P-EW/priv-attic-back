@@ -32,7 +32,9 @@ export class PostsDao {
     );
 
   /**
-   * Call mongoose method, call toJSON on each result and returns PostModel[] or undefined
+   * Returns every posts of the list matching poseudo in parameter
+   *
+   * @param {string} pseudo of the post in the db
    *
    * @return {Observable<Post[] | void>}
    */
@@ -54,6 +56,7 @@ export class PostsDao {
       filter((docs: PostDocument[]) => !!docs && docs.length > 0),
       defaultIfEmpty(undefined),
     );
+
   /**
    * Returns one post of the list matching id in parameter
    *
@@ -65,6 +68,29 @@ export class PostsDao {
     from(this._postModel.findById(id)).pipe(
       filter((doc: PostDocument) => !!doc),
       map((doc: PostDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
+    );
+
+  /**
+   * Returns every posts of the list matching the categories in parameter
+   *
+   * @param {string[]} categs of the post in the db
+   *
+   * @return {Observable<Post[] | void>}
+   */
+  // I have to make .tostring().split(',') because mongoose doesn't recognize it as an array
+  findByCategs = (categs: string[]): Observable<Post[] | void> =>
+    from(
+      this._postModel
+        .find({
+          categories: {
+            $all: categs.toString().split(','),
+          },
+        })
+        .collation({ locale: 'en', strength: 2 }),
+    ).pipe(
+      filter((docs: PostDocument[]) => !!docs && docs.length > 0),
+      map((docs: PostDocument[]) => docs.map((_: PostDocument) => _.toJSON())),
       defaultIfEmpty(undefined),
     );
 

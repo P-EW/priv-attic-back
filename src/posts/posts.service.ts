@@ -33,14 +33,25 @@ export class PostsService {
     );
 
   /**
-   * Returns all existing posts linked to the user in the list
+   * Returns every posts of the list matching pseudo in parameter
    *
-   * @returns {Observable<PostEntity[] | void>}
+   * @param {string} pseudo of the post
+   *
+   * @returns {Observable<PostEntity[]>}
    */
   findAllPostsFromPseudo = (pseudo: string): Observable<PostEntity[] | void> =>
     this._postsDao.findPostsByPseudo(pseudo).pipe(
-      filter((_: Post[]) => !!_),
-      map((_: Post[]) => _.map((__: Post) => new PostEntity(__))),
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: Post[]) =>
+        !!_
+          ? of(_.map((__: Post) => new PostEntity(__)))
+          : throwError(
+              () =>
+                new NotFoundException(`Post with pseudo '${pseudo}' not found`),
+            ),
+      ),
       defaultIfEmpty(undefined),
     );
 
@@ -63,6 +74,31 @@ export class PostsService {
               () => new NotFoundException(`Post with id '${id}' not found`),
             ),
       ),
+    );
+
+  /**
+   * Returns every posts of the list matching categories in parameter
+   *
+   * @param {string[]} categs of the post
+   *
+   * @returns {Observable<PostEntity[]>}
+   */
+  findAllPostsFromCategs = (
+    categs: string[],
+  ): Observable<PostEntity[] | void> =>
+    this._postsDao.findByCategs(categs).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: Post[]) =>
+        !!_
+          ? of(_.map((__: Post) => new PostEntity(__)))
+          : throwError(
+              () =>
+                new NotFoundException(`Post with categs '${categs}' not found`),
+            ),
+      ),
+      defaultIfEmpty(undefined),
     );
 
   /**
