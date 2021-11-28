@@ -25,7 +25,7 @@ export class User {
     type: String,
     trim: true,
   })
-  photo: string;
+  image: string;
 
   @Prop({
     type: String,

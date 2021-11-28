@@ -63,15 +63,15 @@ export class UpdateUserDto {
   birthDate?: number;
 
   @ApiPropertyOptional({
-    name: 'photo',
-    description: 'Photo URL',
+    name: 'image',
+    description: 'Image URL',
     example: 'https://randomuser.me/portraits/men/55.jpg',
     pattern: '/^.(jpg|png|gif)$',
   })
   @IsString()
   @Matches('^.*\\.(jpg|png|gif)$')
   @IsOptional()
-  photo?: string;
+  image?: string;
 
   @ApiProperty({
     name: 'phone',

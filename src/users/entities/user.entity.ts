@@ -14,14 +14,14 @@ export class UserEntity {
   id: string;
 
   @ApiPropertyOptional({
-    name: 'photo',
-    description: 'Photo URL',
+    name: 'image',
+    description: 'Image URL',
     example: 'https://randomuser.me/portraits/men/55.jpg',
     pattern: ' /([a-z\\-_0-9\\/\\:\\.]*\\.(jpg|jpeg|png|gif))/i',
   })
   @Expose()
   @Type(() => String)
-  photo: string;
+  image: string;
 
   @ApiProperty({
     name: 'firstname',
