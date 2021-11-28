@@ -29,6 +29,7 @@ import { HandlerParams } from './validators/handler-params';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { HandlerPseudo } from './validators/handler-pseudo';
+import { HandlerCategories } from './validators/handler-categories';
 
 @Controller('posts')
 @ApiTags('posts')
@@ -67,7 +68,9 @@ export class PostsController {
     type: PostEntity,
     isArray: true,
   })
-  @ApiNoContentResponse({ description: 'No post exists in database' })
+  @ApiNotFoundResponse({
+    description: 'Post with the given "pseudo" doesn\'t exist in the database',
+  })
   @ApiParam({
     name: 'pseudo',
     description: 'Unique identifier of the user in the database',
@@ -108,6 +111,30 @@ export class PostsController {
   @Get(':id')
   findOne(@Param() params: HandlerParams): Observable<PostEntity> {
     return this._postsService.findOne(params.id);
+  }
+
+  /**
+   * Handler to answer to GET /posts/cats/:categories route
+   *
+   * @returns Observable<PostEntity[] | void>
+   */
+  @ApiOkResponse({
+    description: 'Returns an array of posts',
+    type: PostEntity,
+    isArray: true,
+  })
+  @ApiNoContentResponse({ description: 'No post exists in database' })
+  @ApiParam({
+    name: 'categories',
+    description: "Array of string matching Post's categories in the database",
+    type: Array,
+    allowEmptyValue: false,
+  })
+  @Get('cats/:categories')
+  findAllPostsFromCategs(
+    @Param() params: HandlerCategories,
+  ): Observable<PostEntity[] | void> {
+    return this._postsService.findAllPostsFromCategs(params.categories);
   }
 
   /**
