@@ -6,7 +6,7 @@ import {
   Get,
   Param,
   Post,
-  Put,
+  Patch,
   UseInterceptors,
 } from '@nestjs/common';
 import {
@@ -196,7 +196,7 @@ export class PostsController {
     allowEmptyValue: false,
   })
   @ApiBody({ description: 'Payload to update a person', type: UpdatePostDto })
-  @Put(':id')
+  @Patch(':id')
   update(
     @Param() params: HandlerParams,
     @Body() updatePostDto: UpdatePostDto,
