@@ -7,5 +7,5 @@ export const jwtConstants = {
 export interface Token {
   access_token: string;
   expiry: number;
-  pseudo: string;
+  id: string;
 }

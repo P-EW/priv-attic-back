@@ -32,21 +32,21 @@ export class AuthService {
 
   generateJWT(user: UserEntity): Observable<Token> {
     return of({
-      access_token: this._jwtService.sign({ pseudo: user.pseudo }),
+      access_token: this._jwtService.sign({ id: user.id }),
       expiry: new Date(jwtConstants.expireTimeNumber * 1000).getTime(),
-      pseudo: user.pseudo,
+      id: user.id,
     });
   }
 
   login(user: ConnectUserDto): Observable<Token | void> {
     return of(user).pipe(
-      mergeMap((u) => this.validateUser(user)),
+      mergeMap(() => this.validateUser(user)),
       mergeMap((user) =>
-        user!
+        !!user
           ? this.generateJWT(user)
           : throwError(() => new UnauthorizedException()),
       ),
-      catchError((_) => throwError(() => new UnauthorizedException())),
+      catchError(() => throwError(() => new UnauthorizedException())),
     );
   }
 }

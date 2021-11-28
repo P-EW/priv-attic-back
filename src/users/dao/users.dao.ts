@@ -68,10 +68,14 @@ export class UsersDao {
     user: UpdateUserDto,
   ): Observable<any | void> {
     return from(
-      this._userModel.findByIdAndUpdate({ pseudo: pseudo }, user, {
-        new: true,
-        runValidators: true,
-      }),
+      this._userModel.findOneAndUpdate(
+        { pseudo: { $regex: pseudo, $options: 'i' } },
+        user,
+        {
+          new: true,
+          runValidators: true,
+        },
+      ),
     ).pipe(map((u) => (!!u ? u.toJSON() : undefined)));
   }
 }

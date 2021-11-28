@@ -16,6 +16,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
+  /**
+   * the user
+   * @param connectUser
+   */
   async validate(connectUser: ConnectUserDto): Promise<any> {
     const user = await this._authService.validateUser(connectUser);
     if (!user) {

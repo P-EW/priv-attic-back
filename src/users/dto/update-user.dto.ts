@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsEmail,
@@ -8,6 +8,7 @@ import {
   IsPhoneNumber,
   IsString,
   MinLength,
+  Matches,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -17,24 +18,37 @@ export class UpdateUserDto {
     description: 'Firstname',
     example: 'Mclaughlin',
   })
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
-  firstname: string;
+  firstname?: string;
 
   @ApiProperty({
     name: 'lastname',
-    description: 'Lastname',
-    example: 'Cochran',
+    description: 'Lirstname',
+    example: 'dupon',
   })
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
-  lastname: string;
+  lastname?: string;
+
+  @ApiProperty({
+    name: 'pseudo',
+    description: 'pseudo',
+    example: 'ziak',
+  })
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  pseudo?: string;
 
   @ApiProperty({
     name: 'email',
     description: 'Email',
     example: 'Mclaughlin.Cochran@undefined.com',
   })
+  @IsOptional()
   @IsEmail()
   email?: string;
 
@@ -44,9 +58,20 @@ export class UpdateUserDto {
     example: '101343600000',
   })
   @Type(() => Number)
+  @IsOptional()
   @IsNumber()
-  @IsNotEmpty()
   birthDate?: number;
+
+  @ApiPropertyOptional({
+    name: 'photo',
+    description: 'Photo URL',
+    example: 'https://randomuser.me/portraits/men/55.jpg',
+    pattern: '/^.(jpg|png|gif)$',
+  })
+  @IsString()
+  @Matches('^.*\\.(jpg|png|gif)$')
+  @IsOptional()
+  photo?: string;
 
   @ApiProperty({
     name: 'phone',
@@ -54,17 +79,18 @@ export class UpdateUserDto {
     example: '+33600000000',
     pattern: '/^(+d{11})$/',
   })
+  @IsOptional()
   @IsPhoneNumber('FR')
-  phone: string;
+  phone?: string;
 
   @ApiProperty({
     name: 'isPrivate',
     description: 'Flag to know if this user is a private account',
     example: false,
   })
+  @IsOptional()
   @Type(() => Boolean)
   @IsBoolean()
-  @IsNotEmpty()
   isPrivate?: boolean;
 
   @ApiProperty({
@@ -77,9 +103,6 @@ export class UpdateUserDto {
   })
   @IsString({
     message: 'Password must be a string',
-  })
-  @IsNotEmpty({
-    message: 'Password must not be empty',
   })
   @IsOptional()
   password?: string;
