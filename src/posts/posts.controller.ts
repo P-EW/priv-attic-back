@@ -163,7 +163,7 @@ export class PostsController {
     type: CreatePostDto,
   })
   @Post()
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   create(@Body() createPostDto: CreatePostDto): Observable<PostEntity> {
     return this._postsService.create(createPostDto);
   }
