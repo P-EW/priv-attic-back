@@ -12,6 +12,7 @@ import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { AuthModule } from './auth/auth.module';
 import { CommentsModule } from './comments/comments.module';
+import { LikesModule } from './likes/likes.module';
 
 async function bootstrap(
   config: AppConfig,
@@ -19,6 +20,7 @@ async function bootstrap(
   swaggerPostsConfig: SwaggerConfig,
   swaggerAuthConfig: SwaggerConfig,
   swaggerCommentsConfig: SwaggerConfig,
+  swaggerLikesConfig: SwaggerConfig,
 ) {
   // create NestJS application
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -42,6 +44,7 @@ async function bootstrap(
   _initializeSwagger(swaggerPostsConfig, app, PostsModule);
   _initializeSwagger(swaggerAuthConfig, app, AuthModule);
   _initializeSwagger(swaggerCommentsConfig, app, CommentsModule);
+  _initializeSwagger(swaggerLikesConfig, app, LikesModule);
 
   // launch server
   await app.listen(config.port, config.host);
@@ -57,6 +60,7 @@ bootstrap(
   Config.get<SwaggerConfig>('swaggerPosts'),
   Config.get<SwaggerConfig>('swaggerAuth'),
   Config.get<SwaggerConfig>('swaggerComments'),
+  Config.get<SwaggerConfig>('swaggerLikes'),
 );
 
 const _initializeSwagger = (
