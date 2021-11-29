@@ -7,13 +7,13 @@ server:
     - "http://localhost:4200"
 swaggerUsers:
   title: New Web's Technologies project with NestJS
-  description: School Project
+  description: Users
   version: 1.0
   tag: users
   path: documentation
 swaggerPosts:
   title: New Web's Technologies project with NestJS
-  description: School Project
+  description: Posts
   version: 1.0
   tag: posts
   path: documentation
@@ -23,10 +23,9 @@ swaggerAuth:
   version: 1.0
   tag: auth
   path: documentation
-
 swaggerComments:
   title: New Web's Technologies project with NestJS
-  description: Authentification
+  description: Comments
   version: 1.0
   tag: comments
   path: documentation

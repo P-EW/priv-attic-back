@@ -12,6 +12,7 @@ import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { AuthModule } from './auth/auth.module';
 import { CommentsModule } from './comments/comments.module';
+import { contentParser } from 'fastify-multer';
 
 async function bootstrap(
   config: AppConfig,
@@ -20,11 +21,11 @@ async function bootstrap(
   swaggerAuthConfig: SwaggerConfig,
   swaggerCommentsConfig: SwaggerConfig,
 ) {
-  // create NestJS application
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter({ logger: true }),
   );
+  await app.register(contentParser);
 
   // enable CORS for NG Application's calls
   await app.enableCors({ origin: config.cors });
