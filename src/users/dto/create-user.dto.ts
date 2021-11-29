@@ -5,6 +5,7 @@ import {
   IsString,
   MinLength,
   IsBoolean,
+  IsNumber,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
@@ -58,10 +59,10 @@ export class CreateUserDto {
   @ApiProperty({
     name: 'birthDate',
     description: 'Birthdate in timestamp format',
-    example: '23/04/1998',
+    example: '101343600000',
   })
   @Type(() => Number)
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
   birthDate: number;
 
