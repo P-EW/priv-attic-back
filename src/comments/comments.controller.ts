@@ -94,10 +94,10 @@ export class CommentsController {
   }
 
   @ApiNoContentResponse({
-    description: 'The post has been successfully deleted',
+    description: 'The comments has been successfully deleted',
   })
   @ApiNotFoundResponse({
-    description: 'Post with the given "id" doesn\'t exist in the database',
+    description: 'authorId with the given "id" doesn\'t exist in the database',
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
   @ApiUnprocessableEntityResponse({
