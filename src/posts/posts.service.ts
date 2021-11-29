@@ -174,4 +174,13 @@ export class PostsService {
             ),
       ),
     );
+
+  deleteAllPostById(id: string): Observable<void> {
+    return this._postsDao.findAllByIdAndRemove(id).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap(() => of(undefined)),
+    );
+  }
 }

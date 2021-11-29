@@ -32,6 +32,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { HandlerPseudo } from './validators/handler-pseudo';
 import { HandlerCategories } from './validators/handler-categories';
 import { JwtAuthGuard } from '../auth/jwt.strategy';
+import { HandlerPublisher } from './validators/handler-publisher';
 
 @Controller('posts')
 @ApiTags('posts')
@@ -235,5 +236,26 @@ export class PostsController {
   @UseGuards(JwtAuthGuard)
   delete(@Param() params: HandlerParams): Observable<void> {
     return this._postsService.delete(params.id);
+  }
+
+  @ApiNoContentResponse({
+    description: 'The posts has been successfully deleted',
+  })
+  @ApiNotFoundResponse({
+    description: 'publisher with the given "id" doesn\'t exist in the database',
+  })
+  @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
+  @ApiUnprocessableEntityResponse({
+    description: "The request can't be performed in the database",
+  })
+  @ApiParam({
+    name: 'publisherId',
+    description: 'Unique identifier of the publisher in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @Delete('from/:publisherId')
+  deleteAllCommentByID(@Param() params: HandlerPublisher): Observable<void> {
+    return this._postsService.deleteAllPostById(params.publisherId);
   }
 }

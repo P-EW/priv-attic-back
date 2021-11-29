@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -24,6 +25,7 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { CommentsService } from './comments.service';
 import { CommentEntity } from './entities/comment.entity';
 import { HandlerParams } from './validators/handler-params';
+import { authorParams } from './validators/author-params';
 
 @Controller('comments')
 @ApiTags('comments')
@@ -35,6 +37,7 @@ export class CommentsController {
    * @param _commentsService
    */
   constructor(private readonly _commentsService: CommentsService) {}
+
   /**
    * Handler to answer to POST /post route
    *
@@ -88,5 +91,26 @@ export class CommentsController {
     @Param() params: HandlerParams,
   ): Observable<CommentEntity[] | void> {
     return this._commentsService.findAllCommentbyPost(params.postId);
+  }
+
+  @ApiNoContentResponse({
+    description: 'The comments has been successfully deleted',
+  })
+  @ApiNotFoundResponse({
+    description: 'authorId with the given "id" doesn\'t exist in the database',
+  })
+  @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
+  @ApiUnprocessableEntityResponse({
+    description: "The request can't be performed in the database",
+  })
+  @ApiParam({
+    name: 'authorId',
+    description: 'Unique identifier of the post in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @Delete('from/:authorId')
+  deleteAllCommentByID(@Param() params: authorParams): Observable<void> {
+    return this._commentsService.deleteAllCommentById(params.authorId);
   }
 }

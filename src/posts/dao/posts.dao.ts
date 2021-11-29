@@ -143,4 +143,12 @@ export class PostsDao {
       map((doc: PostDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),
     );
+
+  findAllByIdAndRemove(id: string): Observable<Post[] | void> {
+    return from(this._postModel.remove({ publisherId: id })).pipe(
+      filter((docs: PostDocument[]) => !!docs && docs.length > 0),
+      map((docs: PostDocument[]) => docs.map((_: PostDocument) => _.toJSON())),
+      defaultIfEmpty(undefined),
+    );
+  }
 }
