@@ -29,6 +29,7 @@ import { HandlerPostId } from './validators/handler-postId';
 import { handlerAuthorId } from './validators/handler-authorId';
 import { JwtAuthGuard } from '../auth/jwt.strategy';
 import { HandlerId } from './validators/handler-id';
+import { handlerPost } from '../comments/validators/handler-post';
 
 @Controller('likes')
 @ApiTags('likes')
@@ -211,5 +212,32 @@ export class LikesController {
   //@UseGuards(JwtAuthGuard)
   delete(@Param() params: HandlerId): Observable<void> {
     return this._likesService.delete(params.id);
+  }
+
+  /**
+   * Handler to answer to GET /like/from/authorId/:authorId route
+   *
+   * @param {HandlerPostId} params list of route params to take like authorId
+   *
+   * @returns Observable<LikeEntity[]>
+   */
+  @ApiOkResponse({
+    description: 'Returns the numbers of likes',
+    type: LikeEntity,
+    isArray: true,
+  })
+  @ApiNoContentResponse({ description: 'No post exists in database' })
+  @ApiNotFoundResponse({
+    description: 'Like with the given "postId" doesn\'t exist in the database',
+  })
+  @ApiParam({
+    name: 'postId',
+    description: 'Unique identifier of the postId in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @Get('nbLike/:postId')
+  nBLikesByPostId(@Param() params: handlerPost): Observable<number | void> {
+    return this._likesService.nBLikesByPostId(params.postId);
   }
 }

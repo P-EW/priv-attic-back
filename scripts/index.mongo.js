@@ -1,6 +1,8 @@
 db.getCollection('users').createIndex(
   { pseudo: 1 },
-  { unique: true }
+  { collation :{ locale : "en" , strength : 2 },
+    unique: true
+  }
 );
 
 db.getCollection('likes').createIndex(

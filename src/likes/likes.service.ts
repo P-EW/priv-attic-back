@@ -127,4 +127,25 @@ export class LikesService {
             ),
       ),
     );
+
+  /**
+   * Get number of like in post
+   * @param {string} idPost of post
+   *
+   * @returns {Observable<number>}
+   */
+  nBLikesByPostId(idPost: string): Observable<number | void> {
+    return this._likesDao.findNbLikesByPostId(idPost).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: number) =>
+        !!_
+          ? of(undefined)
+          : throwError(
+              () => new NotFoundException(`Like with id '${idPost}' not found`),
+            ),
+      ),
+    );
+  }
 }

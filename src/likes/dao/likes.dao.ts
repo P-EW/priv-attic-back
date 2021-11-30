@@ -106,4 +106,14 @@ export class LikesDao {
       map((doc: LikeDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),
     );
+
+  /**
+   * Get
+   * @param idPost
+   */
+  findNbLikesByPostId = (idPost: string): Observable<number | void> =>
+    from(this._likeModel.countDocuments({ postId: idPost })).pipe(
+      filter((doc: LikeDocument) => !!doc),
+      defaultIfEmpty(undefined),
+    );
 }
