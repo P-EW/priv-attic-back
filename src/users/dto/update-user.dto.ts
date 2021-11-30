@@ -65,7 +65,7 @@ export class UpdateUserDto {
   @ApiPropertyOptional({
     name: 'image',
     description: 'Image URL',
-    example: 'https://randomuser.me/portraits/men/55.jpg',
+    example: 'randomuser.me/portraits/men/55.jpg',
     pattern: '/^.(jpg|png|gif)$',
   })
   @IsString()
@@ -96,7 +96,7 @@ export class UpdateUserDto {
   @ApiProperty({
     name: 'password',
     description: 'Mot de passe',
-    example: 'jZfdsfsea8',
+    example: 'Azerty1234',
   })
   @MinLength(8, {
     message: 'Password too low',

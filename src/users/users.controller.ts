@@ -43,7 +43,7 @@ export class UsersController {
   constructor(private readonly _userService: UsersService) {}
 
   @ApiOkResponse({
-    description: 'Returns the person for the given "pseudo"',
+    description: 'Returns the user for the given "pseudo"',
     type: UserEntity,
   })
   @ApiNotFoundResponse({
@@ -55,7 +55,7 @@ export class UsersController {
   })
   @ApiParam({
     name: 'pseudo',
-    description: 'Unique pseudo of the person in the database',
+    description: 'Unique pseudo of the user in the database',
     type: String,
     allowEmptyValue: false,
   })
@@ -94,10 +94,10 @@ export class UsersController {
   }
 
   /**
-   * Handler to answer to POST /people route
+   * Handler to answer to POST /users route
    *
    *
-   * @returns Observable<PersonEntity>
+   * @returns Observable<UserEntity>
    * @param createUserDto
    */
 
@@ -142,22 +142,22 @@ export class UsersController {
   }
 
   /**
-   * Handler to answer to PUT /people/:id route
+   * Handler to answer to PUT /users/:id route
    *
    * @param {HandlerParams} params list of route params to take person id
    * @param updatePersonDto data to update
    *
-   * @returns Observable<PersonEntity>
+   * @returns Observable<UserEntity>
    */
   @ApiOkResponse({
-    description: 'The person has been successfully updated',
+    description: 'The user has been successfully updated',
     type: UserEntity,
   })
   @ApiNotFoundResponse({
-    description: 'Person with the given "id" doesn\'t exist in the database',
+    description: 'User with the given "id" doesn\'t exist in the database',
   })
   @ApiConflictResponse({
-    description: 'The person already exists in the database',
+    description: 'The user already exists in the database',
   })
   @ApiBadRequestResponse({
     description: 'Parameter and/or payload provided are not good',

@@ -175,6 +175,13 @@ export class PostsService {
       ),
     );
 
+  /**
+   * Deletes Posts in Posts list
+   *
+   * @param {string} id of the postId to delete
+   *
+   * @return {Observable<void>}
+   */
   deleteAllPostById(id: string): Observable<void> {
     return this._postsDao.findAllByIdAndRemove(id).pipe(
       catchError((e) =>

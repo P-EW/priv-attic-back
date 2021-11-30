@@ -64,7 +64,7 @@ export class LikesService {
    *
    * @param like to create
    *
-   * @returns {Observable<LikeEntity>}
+   * @return {Observable<LikeEntity>}
    */
 
   create = (like: CreateLikeDto): Observable<LikeEntity> =>
@@ -81,7 +81,7 @@ export class LikesService {
    *
    * @param {string} id of the author to delete
    *
-   * @returns {Observable<void>}
+   * @return {Observable<void>}
    */
   deleteAllLikeByAuthorId(id: string): Observable<void> {
     return this._likesDao.findAllbyAuthorIdAndRemove(id).pipe(
@@ -96,7 +96,7 @@ export class LikesService {
    *
    * @param {string} id of the post to delete
    *
-   * @returns {Observable<void>}
+   * @return {Observable<void>}
    */
   deleteAllLikeByPostId(id: string): Observable<void> {
     return this._likesDao.findAllbypostIdAndRemove(id).pipe(
@@ -112,7 +112,7 @@ export class LikesService {
    *
    * @param {string} id of the like to delete
    *
-   * @returns {Observable<void>}
+   * @return {Observable<void>}
    */
   delete = (id: string): Observable<void> =>
     this._likesDao.findByIdAndRemove(id).pipe(
@@ -132,7 +132,7 @@ export class LikesService {
    * Get number of like in post
    * @param {string} idPost of post
    *
-   * @returns {Observable<number>}
+   * @return {Observable<number>}
    */
   nBLikesByPostId(idPost: string): Observable<number | void> {
     return this._likesDao.findNbLikesByPostId(idPost).pipe(

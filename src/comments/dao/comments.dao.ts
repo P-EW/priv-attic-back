@@ -8,6 +8,11 @@ import { CreateCommentDto } from '../dto/create-comment.dto';
 
 @Injectable()
 export class CommentsDao {
+  /**
+   * Class constructor
+   *
+   * @param {Model<CommentDocument>} _commentModel instance of the model representing a Comment
+   */
   constructor(
     @InjectModel(Comment.name)
     private readonly _commentModel: Model<CommentDocument>,
@@ -16,6 +21,7 @@ export class CommentsDao {
   /**
    * Call moogoose method, call toJson on each result and returns CommentModel[] or undefined
    *
+   * @param {string} postId of the comment in the db
    * @return {Observable<Comment[] | void>}
    */
   findCommentsByPost(postId: string): Observable<Comment[] | void> {
@@ -29,8 +35,11 @@ export class CommentsDao {
   }
 
   /**
+   * Check if Comment already exists with index and add it in comments list
    *
-   * @param comment
+   * @param {CreateCommentDto} comment to create
+   *
+   * @return {Observable<Comment>}
    */
   save(comment: CreateCommentDto): Observable<Comment> {
     return from(new this._commentModel(comment).save()).pipe(
@@ -38,6 +47,13 @@ export class CommentsDao {
     );
   }
 
+  /**
+   * Delete all comments of a authorId  in comments list
+   *
+   * @param {string} id
+   *
+   * @return {Observable<Comment | void>}
+   */
   findAllbyAuthorIdAndRemove(id: string): Observable<Comment[] | void> {
     return from(this._commentModel.remove({ authorId: id })).pipe(
       filter((docs: CommentDocument[]) => !!docs && docs.length > 0),
@@ -48,6 +64,13 @@ export class CommentsDao {
     );
   }
 
+  /**
+   * Delete all comments of a postId  in comments list
+   *
+   * @param {string} id
+   *
+   * @return {Observable<Comment | void>}
+   */
   findAllbypostIdAndRemove(id: string): Observable<Comment[] | void> {
     return from(this._commentModel.remove({ postId: id })).pipe(
       filter((docs: CommentDocument[]) => !!docs && docs.length > 0),

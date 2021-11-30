@@ -18,7 +18,7 @@ export class ConnectUserDto {
   @ApiProperty({
     name: 'password',
     description: 'Mot de passe',
-    example: 'jZadqzdqz8',
+    example: 'Azerty1234',
   })
   @MinLength(8, {
     message: 'Password too low',

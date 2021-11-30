@@ -43,7 +43,7 @@ export class CommentsService {
    *
    * @param comment to create
    *
-   * @returns {Observable<PostEntity>}
+   * @return {Observable<PostEntity>}
    */
   create = (comment: CreateCommentDto): Observable<CommentEntity> =>
     this._addComment(comment).pipe(
@@ -54,6 +54,13 @@ export class CommentsService {
       map((_: Comment) => new CommentEntity(_)),
     );
 
+  /**
+   * Deletes Comments in Comments list
+   *
+   * @param {string} id of the author to delete
+   *
+   * @return {Observable<void>}
+   */
   deleteAllCommentByAuthorId(id: string): Observable<void> {
     return this._commentsDao.findAllbyAuthorIdAndRemove(id).pipe(
       catchError((e) =>
@@ -62,6 +69,13 @@ export class CommentsService {
       mergeMap(() => of(undefined)),
     );
   }
+  /**
+   * Deletes Comments in Comments list
+   *
+   * @param {string} id of the postId to delete
+   *
+   * @return {Observable<void>}
+   */
   deleteAllCommentByPostId(id: string): Observable<void> {
     return this._commentsDao.findAllbypostIdAndRemove(id).pipe(
       catchError((e) =>
@@ -70,6 +84,16 @@ export class CommentsService {
       mergeMap(() => of(undefined)),
     );
   }
+
+  /**
+   * Add Comment with good data in comments list
+   *
+   * @param {CreateCommentDto} comment to add
+   *
+   * @return {Observable<CreateCommentDto>}
+   *
+   * @private
+   */
   private _addComment = (
     comment: CreateCommentDto,
   ): Observable<CreateCommentDto> =>

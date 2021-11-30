@@ -5,15 +5,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { CreateLikeDto } from '../dto/create-like.dto';
 import { defaultIfEmpty, from, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import {
-  Comment,
-  CommentDocument,
-} from '../../comments/schemas/comment.schema';
 
 @Injectable()
 export class LikesDao {
   /**
-   * Ckass constructor
+   * Class constructor
    *
    * @param {Model<LikeDocument>} _likeModel instance of the model representing a Like
    */
@@ -64,6 +60,7 @@ export class LikesDao {
       map((doc: LikeDocument) => doc.toJSON()),
     );
   }
+
   /**
    * Delete all likes of a authorId  in likes list
    *

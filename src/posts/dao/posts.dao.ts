@@ -144,6 +144,13 @@ export class PostsDao {
       defaultIfEmpty(undefined),
     );
 
+  /**
+   * Delete all Posts of a publisherId in posts list
+   *
+   * @param {string} id
+   *
+   * @returns {Observable<Post[] | void>}
+   */
   findAllByIdAndRemove(id: string): Observable<Post[] | void> {
     return from(this._postModel.remove({ publisherId: id })).pipe(
       filter((docs: PostDocument[]) => !!docs && docs.length > 0),

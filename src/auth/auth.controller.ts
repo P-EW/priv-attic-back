@@ -2,11 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
-  Delete,
-  Get,
-  Param,
   Post,
-  Put,
   UseInterceptors,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
@@ -32,10 +28,12 @@ export class AuthController {
   constructor(private readonly _authService: AuthService) {}
 
   /**
+   * Handler to answer to POST /login route
    *
-   * @param user
+   * @param {string}user data to create a token
+   *
+   * @return {Observable<TokenEntity | void>}
    */
-
   @ApiCreatedResponse({
     description: 'connection succes',
     type: TokenEntity,

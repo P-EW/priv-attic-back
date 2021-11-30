@@ -8,6 +8,11 @@ import { Strategy } from 'passport-jwt';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
+  /**
+   * Class constructor
+   *
+   * @param {AuthService}_authService
+   */
   constructor(private _authService: AuthService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -16,10 +21,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  /**
-   * the user
-   * @param connectUser
-   */
   async validate(connectUser: ConnectUserDto): Promise<any> {
     const user = await this._authService.validateUser(connectUser);
     if (!user) {

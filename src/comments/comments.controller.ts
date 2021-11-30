@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   Post,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import {
@@ -27,6 +28,7 @@ import { CommentEntity } from './entities/comment.entity';
 import { HandlerParams } from './validators/handler-params';
 import { handlerAuthor } from './validators/handler-author';
 import { handlerPost } from './validators/handler-post';
+import { JwtAuthGuard } from '../auth/jwt.strategy';
 
 @Controller('comments')
 @ApiTags('comments')
@@ -40,7 +42,7 @@ export class CommentsController {
   constructor(private readonly _commentsService: CommentsService) {}
 
   /**
-   * Handler to answer to POST /post route
+   * Handler to answer to POST /comment route
    *
    * @param createCommentDto data to create
    *
@@ -59,7 +61,7 @@ export class CommentsController {
     type: CreateCommentDto,
   })
   @Post()
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   create(
     @Body() createCommentDto: CreateCommentDto,
   ): Observable<CommentEntity> {

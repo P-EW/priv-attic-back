@@ -12,6 +12,8 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 export class UsersDao {
   /**
    * Class constructor
+   *
+   * @param {Model<UserDocument>} _userModel isntance of the model representing a User
    */
   constructor(
     @InjectModel(User.name)
@@ -77,6 +79,13 @@ export class UsersDao {
     );
   }
 
+  /**
+   * Update a user in users lsit
+   * @param {string} pseudo
+   * @param {UpdateUserDto} user
+   *
+   * @returns  {Observable<User | void>}
+   */
   findByPseudoAndUpdate(
     pseudo: string,
     user: UpdateUserDto,

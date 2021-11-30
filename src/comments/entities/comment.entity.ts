@@ -48,6 +48,11 @@ export class CommentEntity {
   @Type(() => Number)
   date: number;
 
+  /**
+   * Class constructor
+   *
+   * @param partial data to insert in object instance
+   */
   constructor(partial: Partial<CommentEntity>) {
     Object.assign(this, partial);
   }

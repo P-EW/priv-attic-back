@@ -100,6 +100,14 @@ export class UsersService {
     );
   }
 
+  /**
+   * Update a user in users list
+   *
+   * @param {string} pseudo
+   * @param {string} user
+   *
+   * @return {Observable<UserEntity | void>}
+   */
   update(pseudo: string, user: UpdateUserDto): Observable<UserEntity> {
     return of(user).pipe(
       map((u) =>
@@ -127,6 +135,11 @@ export class UsersService {
     );
   }
 
+  /**
+   * Create a password hashed
+   *
+   * @param pth
+   */
   hashPassWord(pth: string): any {
     return { password: bcrypt.hashSync(pth, 10) };
   }
