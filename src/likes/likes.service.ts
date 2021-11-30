@@ -128,6 +128,26 @@ export class LikesService {
       ),
     );
 
+  deleteByPostAndAuthor = (
+    postId: string,
+    authorId: string,
+  ): Observable<void> =>
+    this._likesDao.findByPostAndAuthorIDAndRemove(postId, authorId).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: Like) =>
+        !!_
+          ? of(undefined)
+          : throwError(
+              () =>
+                new NotFoundException(
+                  `Like with postId '${postId}' and authorId '${authorId} not found`,
+                ),
+            ),
+      ),
+    );
+
   /**
    * Get number of like in post
    * @param {string} idPost of post

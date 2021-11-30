@@ -30,6 +30,7 @@ import { handlerAuthorId } from './validators/handler-authorId';
 import { JwtAuthGuard } from '../auth/jwt.strategy';
 import { HandlerId } from './validators/handler-id';
 import { handlerPost } from '../comments/validators/handler-post';
+import { HandlerPostIdAndAuthorId } from './validators/handler-postId-and-authorId';
 
 @Controller('likes')
 @ApiTags('likes')
@@ -158,7 +159,7 @@ export class LikesController {
   }
 
   /**
-   * Handler to answer to DELETE /likes/from/postId/:postId route
+   * Handler to answer to DELETE /likes/from/post/:postId route
    *
    * @param {handlerAuthorId} params list of route params to take like postId
    *
@@ -180,7 +181,7 @@ export class LikesController {
     type: String,
     allowEmptyValue: false,
   })
-  @Delete('from/postId/:postId')
+  @Delete('from/post/:postId')
   deleteAllCommentByPostId(@Param() params: HandlerPostId): Observable<void> {
     return this._likesService.deleteAllLikeByPostId(params.postId);
   }
@@ -214,6 +215,32 @@ export class LikesController {
     return this._likesService.delete(params.id);
   }
 
+  /**
+   * Handler to answer to DELETE /likes/from/author/:authorId route
+   *
+   * @param {handlerAuthorId} params list of route params to take like authorId
+   *
+   * @returns Observable<void>
+   */
+  @ApiParam({
+    name: 'postId',
+    description: 'Unique identifier of the like in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @ApiParam({
+    name: 'authorId',
+    description: 'Unique identifier of the like in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @Delete('i/:postId/:authorId')
+  deleteByPostAndAuthor(@Param() params: HandlerPostIdAndAuthorId) {
+    return this._likesService.deleteByPostAndAuthor(
+      params.postId,
+      params.authorId,
+    );
+  }
   /**
    * Handler to answer to GET /like/from/authorId/:authorId route
    *

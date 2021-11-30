@@ -104,6 +104,21 @@ export class LikesDao {
       defaultIfEmpty(undefined),
     );
 
+  findByPostAndAuthorIDAndRemove = (
+    postId: string,
+    authorId: string,
+  ): Observable<Like | void> =>
+    from(
+      this._likeModel.findOneAndRemove({
+        postId: postId,
+        authorId: authorId,
+      }),
+    ).pipe(
+      filter((doc: LikeDocument) => !!doc),
+      map((doc: LikeDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
+    );
+
   /**
    * Get
    * @param idPost
