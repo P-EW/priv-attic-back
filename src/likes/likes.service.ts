@@ -48,4 +48,21 @@ export class LikesService {
       ),
       map((_: Like) => new LikeEntity(_)),
     );
+
+  deleteAllLikeByAuthorId(id: string): Observable<void> {
+    return this._likesDao.findAllbyAuthorIdAndRemove(id).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap(() => of(undefined)),
+    );
+  }
+  deleteAllLikeByPostId(id: string): Observable<void> {
+    return this._likesDao.findAllbypostIdAndRemove(id).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap(() => of(undefined)),
+    );
+  }
 }

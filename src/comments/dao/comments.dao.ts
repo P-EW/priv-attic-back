@@ -38,8 +38,18 @@ export class CommentsDao {
     );
   }
 
-  findAllbyIdAndRemove(id: string): Observable<Comment[] | void> {
+  findAllbyAuthorIdAndRemove(id: string): Observable<Comment[] | void> {
     return from(this._commentModel.remove({ authorId: id })).pipe(
+      filter((docs: CommentDocument[]) => !!docs && docs.length > 0),
+      map((docs: CommentDocument[]) =>
+        docs.map((_: CommentDocument) => _.toJSON()),
+      ),
+      defaultIfEmpty(undefined),
+    );
+  }
+
+  findAllbypostIdAndRemove(id: string): Observable<Comment[] | void> {
+    return from(this._commentModel.remove({ postId: id })).pipe(
       filter((docs: CommentDocument[]) => !!docs && docs.length > 0),
       map((docs: CommentDocument[]) =>
         docs.map((_: CommentDocument) => _.toJSON()),

@@ -25,7 +25,8 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { CommentsService } from './comments.service';
 import { CommentEntity } from './entities/comment.entity';
 import { HandlerParams } from './validators/handler-params';
-import { authorParams } from './validators/author-params';
+import { handlerAuthor } from './validators/handler-author';
+import { handlerPost } from './validators/handler-post';
 
 @Controller('comments')
 @ApiTags('comments')
@@ -109,8 +110,29 @@ export class CommentsController {
     type: String,
     allowEmptyValue: false,
   })
-  @Delete('from/:authorId')
-  deleteAllCommentByID(@Param() params: authorParams): Observable<void> {
-    return this._commentsService.deleteAllCommentById(params.authorId);
+  @Delete('from/author/:authorId')
+  deleteAllCommentByAuthorID(@Param() params: handlerAuthor): Observable<void> {
+    return this._commentsService.deleteAllCommentByAuthorId(params.authorId);
+  }
+
+  @ApiNoContentResponse({
+    description: 'The comments has been successfully deleted',
+  })
+  @ApiNotFoundResponse({
+    description: 'authorId with the given "id" doesn\'t exist in the database',
+  })
+  @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
+  @ApiUnprocessableEntityResponse({
+    description: "The request can't be performed in the database",
+  })
+  @ApiParam({
+    name: 'postId',
+    description: 'Unique identifier of the post in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @Delete('from/postId/:postId')
+  deleteAllCommentByPostId(@Param() params: handlerPost): Observable<void> {
+    return this._commentsService.deleteAllCommentByPostId(params.postId);
   }
 }

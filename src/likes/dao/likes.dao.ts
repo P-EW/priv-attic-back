@@ -5,6 +5,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { CreateLikeDto } from '../dto/create-like.dto';
 import { defaultIfEmpty, from, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import {
+  Comment,
+  CommentDocument,
+} from '../../comments/schemas/comment.schema';
 
 @Injectable()
 export class LikesDao {
@@ -31,6 +35,26 @@ export class LikesDao {
   save(like: CreateLikeDto): Observable<Like> {
     return from(new this._likeModel(like).save()).pipe(
       map((doc: LikeDocument) => doc.toJSON()),
+    );
+  }
+
+  findAllbyAuthorIdAndRemove(id: string): Observable<Comment[] | void> {
+    return from(this._likeModel.remove({ authorId: id })).pipe(
+      filter((docs: CommentDocument[]) => !!docs && docs.length > 0),
+      map((docs: CommentDocument[]) =>
+        docs.map((_: CommentDocument) => _.toJSON()),
+      ),
+      defaultIfEmpty(undefined),
+    );
+  }
+
+  findAllbypostIdAndRemove(id: string): Observable<Comment[] | void> {
+    return from(this._likeModel.remove({ postId: id })).pipe(
+      filter((docs: CommentDocument[]) => !!docs && docs.length > 0),
+      map((docs: CommentDocument[]) =>
+        docs.map((_: CommentDocument) => _.toJSON()),
+      ),
+      defaultIfEmpty(undefined),
     );
   }
 }

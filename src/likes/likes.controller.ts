@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -25,6 +26,7 @@ import { CreateLikeDto } from './dto/create-like.dto';
 import { LikeEntity } from './entities/like.entity';
 import { HandlePostId } from './validators/handle-postId';
 import { handlerAuthorId } from './validators/handler-authorId';
+import { handlerAuthor } from '../comments/validators/handler-author';
 
 @Controller('likes')
 @ApiTags('likes')
@@ -95,5 +97,47 @@ export class LikesController {
     @Param() params: handlerAuthorId,
   ): Observable<LikeEntity[] | void> {
     return this._likesService.findAllLikebyAuthor(params.authorId);
+  }
+
+  @ApiNoContentResponse({
+    description: 'The comments has been successfully deleted',
+  })
+  @ApiNotFoundResponse({
+    description: 'authorId with the given "id" doesn\'t exist in the database',
+  })
+  @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
+  @ApiUnprocessableEntityResponse({
+    description: "The request can't be performed in the database",
+  })
+  @ApiParam({
+    name: 'authorId',
+    description: 'Unique identifier of the post in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @Delete('from/author/:authorId')
+  deleteAllCommentByAuthorID(@Param() params: handlerAuthor): Observable<void> {
+    return this._likesService.deleteAllLikeByAuthorId(params.authorId);
+  }
+
+  @ApiNoContentResponse({
+    description: 'The comments has been successfully deleted',
+  })
+  @ApiNotFoundResponse({
+    description: 'authorId with the given "id" doesn\'t exist in the database',
+  })
+  @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
+  @ApiUnprocessableEntityResponse({
+    description: "The request can't be performed in the database",
+  })
+  @ApiParam({
+    name: 'postId',
+    description: 'Unique identifier of the post in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @Delete('from/postId/:postId')
+  deleteAllCommentByPostId(@Param() params: HandlePostId): Observable<void> {
+    return this._likesService.deleteAllLikeByPostId(params.postId);
   }
 }
