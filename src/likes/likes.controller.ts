@@ -20,35 +20,24 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { HttpInterceptor } from '../interceptors/http.interceptor';
+import { LikesService } from './likes.service';
 import { Observable } from 'rxjs';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { CommentsService } from './comments.service';
-import { CommentEntity } from './entities/comment.entity';
-import { HandlerParams } from './validators/handler-params';
-import { handlerAuthor } from './validators/handler-author';
-import { handlerPost } from './validators/handler-post';
+import { CreateLikeDto } from './dto/create-like.dto';
+import { LikeEntity } from './entities/like.entity';
+import { HandlePostId } from './validators/handle-postId';
+import { handlerAuthorId } from './validators/handler-authorId';
+import { handlerAuthor } from '../comments/validators/handler-author';
 
-@Controller('comments')
-@ApiTags('comments')
+@Controller('likes')
+@ApiTags('likes')
 @UseInterceptors(ClassSerializerInterceptor)
 @UseInterceptors(HttpInterceptor)
-export class CommentsController {
-  /**
-   * Class constructor
-   * @param _commentsService
-   */
-  constructor(private readonly _commentsService: CommentsService) {}
+export class LikesController {
+  constructor(private readonly _likesService: LikesService) {}
 
-  /**
-   * Handler to answer to POST /post route
-   *
-   * @param createCommentDto data to create
-   *
-   * @returns Observable<CommentEntity>
-   */
   @ApiCreatedResponse({
     description: 'The post has been successfully created',
-    type: CommentEntity,
+    type: LikeEntity,
   })
   @ApiBadRequestResponse({ description: 'Payload provided is not good' })
   @ApiUnprocessableEntityResponse({
@@ -56,24 +45,17 @@ export class CommentsController {
   })
   @ApiBody({
     description: 'Payload to create a new post',
-    type: CreateCommentDto,
+    type: CreateLikeDto,
   })
   @Post()
   //@UseGuards(JwtAuthGuard)
-  create(
-    @Body() createCommentDto: CreateCommentDto,
-  ): Observable<CommentEntity> {
-    return this._commentsService.create(createCommentDto);
+  create(@Body() createLikeDto: CreateLikeDto): Observable<LikeEntity> {
+    return this._likesService.create(createLikeDto);
   }
 
-  /**
-   * Handler to answer to GET /comments route
-   *
-   * @returns Observable<PostEntity[] | void>
-   */
   @ApiOkResponse({
     description: 'Returns an array of comments',
-    type: CommentEntity,
+    type: LikeEntity,
     isArray: true,
   })
   @ApiNoContentResponse({ description: 'No post exists in database' })
@@ -87,11 +69,34 @@ export class CommentsController {
     type: String,
     allowEmptyValue: false,
   })
-  @Get('from/:postId')
-  findAllCommentByPost(
-    @Param() params: HandlerParams,
-  ): Observable<CommentEntity[] | void> {
-    return this._commentsService.findAllCommentbyPost(params.postId);
+  @Get('from/post/:postId')
+  findAllLikesByPost(
+    @Param() params: HandlePostId,
+  ): Observable<LikeEntity[] | void> {
+    return this._likesService.findAllLikebyPost(params.postId);
+  }
+
+  @ApiOkResponse({
+    description: 'Returns an array of comments',
+    type: LikeEntity,
+    isArray: true,
+  })
+  @ApiNoContentResponse({ description: 'No post exists in database' })
+  @ApiNotFoundResponse({
+    description:
+      'Comment with the given "postId" doesn\'t exist in the database',
+  })
+  @ApiParam({
+    name: 'authorId',
+    description: 'Unique identifier of the postId in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @Get('from/author/:authorId')
+  findAllLikesByAuthor(
+    @Param() params: handlerAuthorId,
+  ): Observable<LikeEntity[] | void> {
+    return this._likesService.findAllLikebyAuthor(params.authorId);
   }
 
   @ApiNoContentResponse({
@@ -112,7 +117,7 @@ export class CommentsController {
   })
   @Delete('from/author/:authorId')
   deleteAllCommentByAuthorID(@Param() params: handlerAuthor): Observable<void> {
-    return this._commentsService.deleteAllCommentByAuthorId(params.authorId);
+    return this._likesService.deleteAllLikeByAuthorId(params.authorId);
   }
 
   @ApiNoContentResponse({
@@ -132,7 +137,7 @@ export class CommentsController {
     allowEmptyValue: false,
   })
   @Delete('from/postId/:postId')
-  deleteAllCommentByPostId(@Param() params: handlerPost): Observable<void> {
-    return this._commentsService.deleteAllCommentByPostId(params.postId);
+  deleteAllCommentByPostId(@Param() params: HandlePostId): Observable<void> {
+    return this._likesService.deleteAllLikeByPostId(params.postId);
   }
 }

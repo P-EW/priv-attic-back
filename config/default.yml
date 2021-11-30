@@ -29,5 +29,12 @@ swaggerComments:
   version: 1.0
   tag: comments
   path: documentation
+
+swaggerLikes:
+  title: New Web's Technologies project with NestJS
+  description: Authentification
+  version: 1.0
+  tag: likes
+  path: documentation
 mongodb:
   uri: mongodb://localhost:27017/nwt

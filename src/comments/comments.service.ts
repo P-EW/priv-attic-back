@@ -54,6 +54,22 @@ export class CommentsService {
       map((_: Comment) => new CommentEntity(_)),
     );
 
+  deleteAllCommentByAuthorId(id: string): Observable<void> {
+    return this._commentsDao.findAllbyAuthorIdAndRemove(id).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap(() => of(undefined)),
+    );
+  }
+  deleteAllCommentByPostId(id: string): Observable<void> {
+    return this._commentsDao.findAllbypostIdAndRemove(id).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap(() => of(undefined)),
+    );
+  }
   private _addComment = (
     comment: CreateCommentDto,
   ): Observable<CreateCommentDto> =>

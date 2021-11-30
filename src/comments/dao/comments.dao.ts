@@ -19,7 +19,6 @@ export class CommentsDao {
    * @return {Observable<Comment[] | void>}
    */
   findCommentsByPost(postId: string): Observable<Comment[] | void> {
-    console.log(postId);
     return from(this._commentModel.find({ postId: postId })).pipe(
       filter((docs: CommentDocument[]) => !!docs && docs.length > 0),
       map((docs: CommentDocument[]) =>
@@ -29,9 +28,33 @@ export class CommentsDao {
     );
   }
 
+  /**
+   *
+   * @param comment
+   */
   save(comment: CreateCommentDto): Observable<Comment> {
     return from(new this._commentModel(comment).save()).pipe(
       map((doc: CommentDocument) => doc.toJSON()),
+    );
+  }
+
+  findAllbyAuthorIdAndRemove(id: string): Observable<Comment[] | void> {
+    return from(this._commentModel.remove({ authorId: id })).pipe(
+      filter((docs: CommentDocument[]) => !!docs && docs.length > 0),
+      map((docs: CommentDocument[]) =>
+        docs.map((_: CommentDocument) => _.toJSON()),
+      ),
+      defaultIfEmpty(undefined),
+    );
+  }
+
+  findAllbypostIdAndRemove(id: string): Observable<Comment[] | void> {
+    return from(this._commentModel.remove({ postId: id })).pipe(
+      filter((docs: CommentDocument[]) => !!docs && docs.length > 0),
+      map((docs: CommentDocument[]) =>
+        docs.map((_: CommentDocument) => _.toJSON()),
+      ),
+      defaultIfEmpty(undefined),
     );
   }
 }
