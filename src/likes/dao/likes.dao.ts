@@ -57,4 +57,11 @@ export class LikesDao {
       defaultIfEmpty(undefined),
     );
   }
+
+  findByIdAndRemove = (id: string): Observable<Like | void> =>
+    from(this._likeModel.findByIdAndRemove(id)).pipe(
+      filter((doc: LikeDocument) => !!doc),
+      map((doc: LikeDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
+    );
 }

@@ -65,4 +65,18 @@ export class LikesService {
       mergeMap(() => of(undefined)),
     );
   }
+
+  delete = (id: string): Observable<void> =>
+    this._likesDao.findByIdAndRemove(id).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: Like) =>
+        !!_
+          ? of(undefined)
+          : throwError(
+              () => new NotFoundException(`Like with id '${id}' not found`),
+            ),
+      ),
+    );
 }

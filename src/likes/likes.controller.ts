@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   Post,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import {
@@ -24,9 +25,10 @@ import { LikesService } from './likes.service';
 import { Observable } from 'rxjs';
 import { CreateLikeDto } from './dto/create-like.dto';
 import { LikeEntity } from './entities/like.entity';
-import { HandlePostId } from './validators/handle-postId';
+import { HandlerPostId } from './validators/handler-postId';
 import { handlerAuthorId } from './validators/handler-authorId';
-import { handlerAuthor } from '../comments/validators/handler-author';
+import { JwtAuthGuard } from '../auth/jwt.strategy';
+import { HandlerId } from './validators/handler-id';
 
 @Controller('likes')
 @ApiTags('likes')
@@ -71,7 +73,7 @@ export class LikesController {
   })
   @Get('from/post/:postId')
   findAllLikesByPost(
-    @Param() params: HandlePostId,
+    @Param() params: HandlerPostId,
   ): Observable<LikeEntity[] | void> {
     return this._likesService.findAllLikebyPost(params.postId);
   }
@@ -116,7 +118,9 @@ export class LikesController {
     allowEmptyValue: false,
   })
   @Delete('from/author/:authorId')
-  deleteAllCommentByAuthorID(@Param() params: handlerAuthor): Observable<void> {
+  deleteAllCommentByAuthorID(
+    @Param() params: handlerAuthorId,
+  ): Observable<void> {
     return this._likesService.deleteAllLikeByAuthorId(params.authorId);
   }
 
@@ -137,7 +141,36 @@ export class LikesController {
     allowEmptyValue: false,
   })
   @Delete('from/postId/:postId')
-  deleteAllCommentByPostId(@Param() params: HandlePostId): Observable<void> {
+  deleteAllCommentByPostId(@Param() params: HandlerPostId): Observable<void> {
     return this._likesService.deleteAllLikeByPostId(params.postId);
+  }
+
+  /**
+   * Handler to answer to DELETE /likes/:id route
+   *
+   * @param {HandlerParams} params list of route params to take like id
+   *
+   * @returns Observable<void>
+   */
+  @ApiNoContentResponse({
+    description: 'The post has been successfully deleted',
+  })
+  @ApiNotFoundResponse({
+    description: 'Like with the given "id" doesn\'t exist in the database',
+  })
+  @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
+  @ApiUnprocessableEntityResponse({
+    description: "The request can't be performed in the database",
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Unique identifier of the like in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @Delete(':id')
+  //@UseGuards(JwtAuthGuard)
+  delete(@Param() params: HandlerId): Observable<void> {
+    return this._likesService.delete(params.id);
   }
 }
