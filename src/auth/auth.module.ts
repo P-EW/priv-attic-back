@@ -13,7 +13,7 @@ import { UsersService } from '../users/users.service';
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: jwtConstants.expireTime },
     }),
   ],
   providers: [AuthService, JwtStrategy, Logger, UsersService],
