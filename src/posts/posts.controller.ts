@@ -33,6 +33,7 @@ import { HandlerPseudo } from './validators/handler-pseudo';
 import { HandlerCategories } from './validators/handler-categories';
 import { JwtAuthGuard } from '../auth/jwt.strategy';
 import { HandlerPublisher } from './validators/handler-publisher';
+import { HandlerPublisherIdAndNull } from './validators/handler-publisherId-and-null';
 
 @Controller('posts')
 @ApiTags('posts')
@@ -86,6 +87,30 @@ export class PostsController {
     @Param() params: HandlerPseudo,
   ): Observable<PostEntity[] | void> {
     return this._postsService.findAllPostsFromPseudo(params.pseudo);
+  }
+
+  /**
+   * Handler to answer to GET /posts route
+   *
+   * @returns Observable<PostEntity[] | void>
+   */
+  @ApiOkResponse({
+    description: 'Returns an array of posts',
+    type: PostEntity,
+    isArray: true,
+  })
+  @ApiNoContentResponse({ description: 'No post exists in database' })
+  @ApiParam({
+    name: 'publisherId',
+    description: 'Unique identifier of the user in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @Get('from/id/:publisherId')
+  findAllPostsFromPublicAndId(
+    @Param() params: HandlerPublisher,
+  ): Observable<PostEntity[] | void> {
+    return this._postsService.findAllPostsFromPublicAndId(params.publisherId);
   }
 
   /**

@@ -55,6 +55,13 @@ export class PostsService {
       defaultIfEmpty(undefined),
     );
 
+  findAllPostsFromPublicAndId = (id: string): Observable<PostEntity[] | void> =>
+    this._postsDao.findPostsPublicAndById(id).pipe(
+      filter((_: Post[]) => !!_),
+      map((_: Post[]) => _.map((__: Post) => new PostEntity(__))),
+      defaultIfEmpty(undefined),
+    );
+
   /**
    * Returns one post of the list matching id in parameter
    *
