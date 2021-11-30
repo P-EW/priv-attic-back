@@ -15,10 +15,17 @@ export class LikesService {
   /**
    * Class constructor
    *
-   * @param _likesDao
+   * @param {LikesDao} _likesDao instance of the DAO
    */
   constructor(private readonly _likesDao: LikesDao) {}
 
+  /**
+   * Returns all likes of the list matching postId in parameter
+   *
+   * @param {string} postId of the likes
+   *
+   * @returns {Observable<LikeEntity[]>}
+   */
   findAllLikebyPost = (postId: string): Observable<LikeEntity[] | void> =>
     this._likesDao.findLikeByPostId(postId).pipe(
       catchError((e) =>
@@ -32,6 +39,13 @@ export class LikesService {
       defaultIfEmpty(undefined),
     );
 
+  /**
+   * Returns all likes of the list matching authorId in parameter
+   *
+   * @param {string} authorId of the likes
+   *
+   * @returns {Observable<LikeEntity[]>}
+   */
   findAllLikebyAuthor = (authorId: string): Observable<LikeEntity[] | void> =>
     this._likesDao.findLikeByAuthorId(authorId).pipe(
       catchError((e) =>
@@ -45,6 +59,14 @@ export class LikesService {
       defaultIfEmpty(undefined),
     );
 
+  /**
+   * Check if person already exists and add it in people list
+   *
+   * @param like to create
+   *
+   * @returns {Observable<LikeEntity>}
+   */
+
   create = (like: CreateLikeDto): Observable<LikeEntity> =>
     of(like).pipe(
       mergeMap((_: CreateLikeDto) => this._likesDao.save(_)),
@@ -54,6 +76,13 @@ export class LikesService {
       map((_: Like) => new LikeEntity(_)),
     );
 
+  /**
+   * Deletes likes in likes list
+   *
+   * @param {string} id of the author to delete
+   *
+   * @returns {Observable<void>}
+   */
   deleteAllLikeByAuthorId(id: string): Observable<void> {
     return this._likesDao.findAllbyAuthorIdAndRemove(id).pipe(
       catchError((e) =>
@@ -62,6 +91,13 @@ export class LikesService {
       mergeMap(() => of(undefined)),
     );
   }
+  /**
+   * Deletes likes in likes list
+   *
+   * @param {string} id of the post to delete
+   *
+   * @returns {Observable<void>}
+   */
   deleteAllLikeByPostId(id: string): Observable<void> {
     return this._likesDao.findAllbypostIdAndRemove(id).pipe(
       catchError((e) =>
@@ -71,6 +107,13 @@ export class LikesService {
     );
   }
 
+  /**
+   * Deletes one like in likes list
+   *
+   * @param {string} id of the like to delete
+   *
+   * @returns {Observable<void>}
+   */
   delete = (id: string): Observable<void> =>
     this._likesDao.findByIdAndRemove(id).pipe(
       catchError((e) =>
