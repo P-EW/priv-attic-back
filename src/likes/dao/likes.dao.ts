@@ -119,6 +119,21 @@ export class LikesDao {
       defaultIfEmpty(undefined),
     );
 
+  findByPostAndAuthor = (
+    postId: string,
+    authorId: string,
+  ): Observable<boolean | void> =>
+    from(
+      this._likeModel.findOne({
+        postId: postId,
+        authorId: authorId,
+      }),
+    ).pipe(
+      filter((doc: LikeDocument) => !!doc),
+      map((doc: LikeDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
+    );
+
   /**
    * Get
    * @param idPost

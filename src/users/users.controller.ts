@@ -89,7 +89,6 @@ export class UsersController {
     allowEmptyValue: false,
   })
   @Get('user/:id')
-  @UseGuards(JwtAuthGuard)
   findOneById(@Param() params: HandlerId): Observable<UserEntity> {
     return this._userService.findOne(params.id);
   }

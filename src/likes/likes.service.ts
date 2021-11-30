@@ -148,6 +148,17 @@ export class LikesService {
       ),
     );
 
+  getByPostAndAuthor = (
+    postId: string,
+    authorId: string,
+  ): Observable<boolean | void> =>
+    this._likesDao.findByPostAndAuthor(postId, authorId).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: boolean) => (!!_ ? of(true) : of(false))),
+    );
+
   /**
    * Get number of like in post
    * @param {string} idPost of post
@@ -159,13 +170,7 @@ export class LikesService {
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
-      mergeMap((_: number) =>
-        !!_
-          ? of(undefined)
-          : throwError(
-              () => new NotFoundException(`Like with id '${idPost}' not found`),
-            ),
-      ),
+      mergeMap((_: number) => of(_)),
     );
   }
 }

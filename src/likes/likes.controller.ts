@@ -234,13 +234,43 @@ export class LikesController {
     type: String,
     allowEmptyValue: false,
   })
-  @Delete('i/:postId/:authorId')
+  @Delete('from/:postId/:authorId')
   deleteByPostAndAuthor(@Param() params: HandlerPostIdAndAuthorId) {
     return this._likesService.deleteByPostAndAuthor(
       params.postId,
       params.authorId,
     );
   }
+
+  /**
+   * Handler to answer to GET /likes/from/author/:authorId route
+   *
+   * @param {handlerAuthorId} params list of route params to take like authorId
+   *
+   * @returns Observable<void>
+   */
+  @ApiParam({
+    name: 'postId',
+    description: 'Unique identifier of the like in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @ApiParam({
+    name: 'authorId',
+    description: 'Unique identifier of the like in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @Get('from/:postId/:authorId')
+  getByPostAndAuthor(
+    @Param() params: HandlerPostIdAndAuthorId,
+  ): Observable<boolean | void> {
+    return this._likesService.getByPostAndAuthor(
+      params.postId,
+      params.authorId,
+    );
+  }
+
   /**
    * Handler to answer to GET /like/from/authorId/:authorId route
    *
