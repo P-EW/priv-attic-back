@@ -12,6 +12,11 @@ import { CreateLikeDto } from './dto/create-like.dto';
 
 @Injectable()
 export class LikesService {
+  /**
+   * Class constructor
+   *
+   * @param _likesDao
+   */
   constructor(private readonly _likesDao: LikesDao) {}
 
   findAllLikebyPost = (postId: string): Observable<LikeEntity[] | void> =>

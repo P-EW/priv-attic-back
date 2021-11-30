@@ -13,7 +13,7 @@ export class CreateLikeDto {
 
   @ApiProperty({
     name: 'authorId',
-    description: 'Unique identifier of the author in the database',
+    description: 'Unique identifier of the authorId in the database',
     example: '61a14015645ee1c3b3b8c316',
   })
   @IsMongoId()

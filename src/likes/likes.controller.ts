@@ -35,10 +35,21 @@ import { HandlerId } from './validators/handler-id';
 @UseInterceptors(ClassSerializerInterceptor)
 @UseInterceptors(HttpInterceptor)
 export class LikesController {
+  /**
+   * Class contructor
+   * @param _likesService
+   */
   constructor(private readonly _likesService: LikesService) {}
 
+  /**
+   * Handler to answer to Like /likes route
+   *
+   * @param createLikeDto data to create
+   *
+   * @returns Observable<LikeEntity>
+   */
   @ApiCreatedResponse({
-    description: 'The post has been successfully created',
+    description: 'The like has been successfully created',
     type: LikeEntity,
   })
   @ApiBadRequestResponse({ description: 'Payload provided is not good' })
@@ -46,7 +57,7 @@ export class LikesController {
     description: "The request can't be performed in the database",
   })
   @ApiBody({
-    description: 'Payload to create a new post',
+    description: 'Payload to create a new like',
     type: CreateLikeDto,
   })
   @Post()
@@ -55,15 +66,21 @@ export class LikesController {
     return this._likesService.create(createLikeDto);
   }
 
+  /**
+   * Handler to answer to GET /like/from/post/:postId route
+   *
+   * @param {HandlerPostId} params list of route params to take like postId
+   *
+   * @returns Observable<LikeEntity[]>
+   */
   @ApiOkResponse({
-    description: 'Returns an array of comments',
+    description: 'Returns an array of likes',
     type: LikeEntity,
     isArray: true,
   })
   @ApiNoContentResponse({ description: 'No post exists in database' })
   @ApiNotFoundResponse({
-    description:
-      'Comment with the given "postId" doesn\'t exist in the database',
+    description: 'Like with the given "postId" doesn\'t exist in the database',
   })
   @ApiParam({
     name: 'postId',
@@ -78,6 +95,13 @@ export class LikesController {
     return this._likesService.findAllLikebyPost(params.postId);
   }
 
+  /**
+   * Handler to answer to GET /like/from/authorId/:authorId route
+   *
+   * @param {HandlerPostId} params list of route params to take like authorId
+   *
+   * @returns Observable<LikeEntity[]>
+   */
   @ApiOkResponse({
     description: 'Returns an array of comments',
     type: LikeEntity,
@@ -86,7 +110,7 @@ export class LikesController {
   @ApiNoContentResponse({ description: 'No post exists in database' })
   @ApiNotFoundResponse({
     description:
-      'Comment with the given "postId" doesn\'t exist in the database',
+      'Like with the given "authorId" doesn\'t exist in the database',
   })
   @ApiParam({
     name: 'authorId',
@@ -101,11 +125,19 @@ export class LikesController {
     return this._likesService.findAllLikebyAuthor(params.authorId);
   }
 
+  /**
+   * Handler to answer to DELETE /likes/from/author/:authorId route
+   *
+   * @param {handlerAuthorId} params list of route params to take like authorId
+   *
+   * @returns Observable<void>
+   */
   @ApiNoContentResponse({
-    description: 'The comments has been successfully deleted',
+    description: 'The Likes have been successfully deleted',
   })
   @ApiNotFoundResponse({
-    description: 'authorId with the given "id" doesn\'t exist in the database',
+    description:
+      'Likes with the given "authorId" doesn\'t exist in the database',
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
   @ApiUnprocessableEntityResponse({
@@ -124,11 +156,18 @@ export class LikesController {
     return this._likesService.deleteAllLikeByAuthorId(params.authorId);
   }
 
+  /**
+   * Handler to answer to DELETE /likes/from/postId/:postId route
+   *
+   * @param {handlerAuthorId} params list of route params to take like postId
+   *
+   * @returns Observable<void>
+   */
   @ApiNoContentResponse({
-    description: 'The comments has been successfully deleted',
+    description: 'The Likes have been successfully deleted',
   })
   @ApiNotFoundResponse({
-    description: 'authorId with the given "id" doesn\'t exist in the database',
+    description: 'Likes with the given "postId" doesn\'t exist in the database',
   })
   @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
   @ApiUnprocessableEntityResponse({

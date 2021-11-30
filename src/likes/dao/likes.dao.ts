@@ -12,11 +12,23 @@ import {
 
 @Injectable()
 export class LikesDao {
+  /**
+   * Ckass constructor
+   *
+   * @param {Model<LikeDocument>} _likeModel instance of the model representing a Like
+   */
   constructor(
     @InjectModel(Like.name)
     private readonly _likeModel: Model<LikeDocument>,
   ) {}
 
+  /**
+   * Returns a list of Like of the list matching authorId in parameter
+   *
+   * @param {string} authorId of the like in db
+   *
+   * @return {Observable<Like[] | void>}
+   */
   findLikeByAuthorId(authorId: string): Observable<Like[] | void> {
     return from(this._likeModel.find({ authorId: authorId })).pipe(
       filter((docs: LikeDocument[]) => !!docs && docs.length > 0),
@@ -24,6 +36,14 @@ export class LikesDao {
       defaultIfEmpty(undefined),
     );
   }
+
+  /**
+   * Returns a list of Like of the list matching postId in parameter
+   *
+   * @param {string} postId of the like in db
+   *
+   * @return {Observable<Like[] | void>}
+   */
   findLikeByPostId(postId: string): Observable<Like[] | void> {
     return from(this._likeModel.find({ postId: postId })).pipe(
       filter((docs: LikeDocument[]) => !!docs && docs.length > 0),
@@ -32,32 +52,54 @@ export class LikesDao {
     );
   }
 
+  /**
+   * Check if like already exists with index and add it in likes list
+   *
+   * @param {CreateLikeDto} like to create
+   *
+   * @return {Observable<Like>}
+   */
   save(like: CreateLikeDto): Observable<Like> {
     return from(new this._likeModel(like).save()).pipe(
       map((doc: LikeDocument) => doc.toJSON()),
     );
   }
-
-  findAllbyAuthorIdAndRemove(id: string): Observable<Comment[] | void> {
+  /**
+   * Delete all likes of a authorId  in likes list
+   *
+   * @param {string} id
+   *
+   * @return {Observable<Like | void>}
+   */
+  findAllbyAuthorIdAndRemove(id: string): Observable<Like[] | void> {
     return from(this._likeModel.remove({ authorId: id })).pipe(
-      filter((docs: CommentDocument[]) => !!docs && docs.length > 0),
-      map((docs: CommentDocument[]) =>
-        docs.map((_: CommentDocument) => _.toJSON()),
-      ),
+      filter((docs: LikeDocument[]) => !!docs && docs.length > 0),
+      map((docs: LikeDocument[]) => docs.map((_: LikeDocument) => _.toJSON())),
       defaultIfEmpty(undefined),
     );
   }
-
-  findAllbypostIdAndRemove(id: string): Observable<Comment[] | void> {
+  /**
+   * Delete all likes of a postId  in likes list
+   *
+   * @param {string} id
+   *
+   * @return {Observable<Like | void>}
+   */
+  findAllbypostIdAndRemove(id: string): Observable<Like[] | void> {
     return from(this._likeModel.remove({ postId: id })).pipe(
-      filter((docs: CommentDocument[]) => !!docs && docs.length > 0),
-      map((docs: CommentDocument[]) =>
-        docs.map((_: CommentDocument) => _.toJSON()),
-      ),
+      filter((docs: LikeDocument[]) => !!docs && docs.length > 0),
+      map((docs: LikeDocument[]) => docs.map((_: LikeDocument) => _.toJSON())),
       defaultIfEmpty(undefined),
     );
   }
 
+  /**
+   * Delete a like in likes list
+   *
+   * @param {string} id
+   *
+   * @return {Observable<Like | void>}
+   */
   findByIdAndRemove = (id: string): Observable<Like | void> =>
     from(this._likeModel.findByIdAndRemove(id)).pipe(
       filter((doc: LikeDocument) => !!doc),
