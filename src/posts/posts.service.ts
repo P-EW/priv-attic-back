@@ -92,12 +92,14 @@ export class PostsService {
    *
    * @param {string[]} categs of the post
    *
+   * @param id
    * @returns {Observable<PostEntity[]>}
    */
   findAllPostsFromCategs = (
     categs: string[],
+    id: string,
   ): Observable<PostEntity[] | void> =>
-    this._postsDao.findByCategs(categs).pipe(
+    this._postsDao.findByCategs(categs, id).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),

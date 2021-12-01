@@ -113,11 +113,12 @@ export class PostsDao {
    *
    * @param {string[]} categs of the post in the db
    *
+   * @param id
    * @return {Observable<Post[] | void>}
    */
   // I have to make .tostring().split(',') because mongoose doesn't recognize it as an array
-  findByCategs = (categs: string[]): Observable<Post[] | void> =>
-    from(
+  findByCategs = (categs: string[], id: string): Observable<Post[] | void> =>
+    /* from(
       this._postModel
         .find({
           categories: {
@@ -128,6 +129,41 @@ export class PostsDao {
     ).pipe(
       filter((docs: PostDocument[]) => !!docs && docs.length > 0),
       map((docs: PostDocument[]) => docs.map((_: PostDocument) => _.toJSON())),
+      defaultIfEmpty(undefined),
+
+    */
+
+    from(
+      this._postModel.aggregate(
+        [
+          {
+            $lookup: {
+              from: 'users',
+              localField: 'publisherId',
+              foreignField: '_id',
+              as: 'publisher',
+            },
+          },
+          {
+            $match: {
+              $and: [
+                {
+                  $or: [
+                    { 'publisher._id': new mongoose.Types.ObjectId(id) },
+                    { 'publisher.isPrivate': false },
+                  ],
+                },
+                { categories: { $all: categs.toString().split(',') } },
+              ],
+            },
+          },
+          { $unset: 'publisher' },
+        ],
+        { collation: { locale: 'en', strength: 2 } },
+      ),
+    ).pipe(
+      filter((docs: PostDocument[]) => !!docs && docs.length > 0),
+      map((docs: PostDocument[]) => docs.map((_: PostDocument) => _)),
       defaultIfEmpty(undefined),
     );
 

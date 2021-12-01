@@ -167,9 +167,17 @@ export class PostsController {
   })
   @Get('cats/:categories')
   findAllPostsFromCategs(
+    @Headers() token: any,
     @Param() params: HandlerCategories,
   ): Observable<PostEntity[] | void> {
-    return this._postsService.findAllPostsFromCategs(params.categories);
+    let res;
+    if (token?.authorization === undefined) {
+      res = null;
+    } else {
+      const userToken = jwtDecode(token.authorization) as Token;
+      res = userToken.id;
+    }
+    return this._postsService.findAllPostsFromCategs(params.categories, res);
   }
 
   /**
