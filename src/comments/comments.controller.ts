@@ -29,6 +29,7 @@ import { HandlerParams } from './validators/handler-params';
 import { handlerAuthor } from './validators/handler-author';
 import { handlerPost } from './validators/handler-post';
 import { JwtAuthGuard } from '../auth/jwt.strategy';
+import { HandlerId } from '../users/validators/handler-id';
 
 @Controller('comments')
 @ApiTags('comments')
@@ -94,6 +95,34 @@ export class CommentsController {
     @Param() params: HandlerParams,
   ): Observable<CommentEntity[] | void> {
     return this._commentsService.findAllCommentbyPost(params.postId);
+  }
+
+  /**
+   * Handler to answer to GET /comments route
+   *
+   * @returns Observable<PostEntity[] | void>
+   */
+  @ApiOkResponse({
+    description: 'Returns an array of comments',
+    type: CommentEntity,
+    isArray: true,
+  })
+  @ApiNoContentResponse({ description: 'No post exists in database' })
+  @ApiNotFoundResponse({
+    description:
+      'Comment with the given "authorId" doesn\'t exist in the database',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Unique identifier of the authorId in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @Get('author/:id')
+  findAllCommentByAuthor(
+    @Param() params: HandlerId,
+  ): Observable<CommentEntity[] | void> {
+    return this._commentsService.findAllCommentbyAuthor(params.id);
   }
 
   @ApiNoContentResponse({

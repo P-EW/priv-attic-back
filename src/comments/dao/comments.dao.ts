@@ -35,6 +35,22 @@ export class CommentsDao {
   }
 
   /**
+   * Call moogoose method, call toJson on each result and returns CommentModel[] or undefined
+   *
+   * @param {string} authorId of the comment in the db
+   * @return {Observable<Comment[] | void>}
+   */
+  findCommentsByAuthor(authorId: string): Observable<Comment[] | void> {
+    return from(this._commentModel.find({ authorId: authorId })).pipe(
+      filter((docs: CommentDocument[]) => !!docs && docs.length > 0),
+      map((docs: CommentDocument[]) =>
+        docs.map((_: CommentDocument) => _.toJSON()),
+      ),
+      defaultIfEmpty(undefined),
+    );
+  }
+
+  /**
    * Check if Comment already exists with index and add it in comments list
    *
    * @param {CreateCommentDto} comment to create
