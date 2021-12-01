@@ -40,21 +40,21 @@ export class LikesService {
     );
 
   /**
-   * Returns all likes of the list matching authorId in parameter
+   * Returns all likes of the list matching pseudo in parameter
    *
-   * @param {string} authorId of the likes
+   * @param {string} pseudo of the likes
    *
    * @returns {Observable<LikeEntity[]>}
    */
-  findAllLikebyAuthor = (authorId: string): Observable<LikeEntity[] | void> =>
-    this._likesDao.findLikeByAuthorId(authorId).pipe(
+  findAllLikebyAuthor = (pseudo: string): Observable<LikeEntity[] | void> =>
+    this._likesDao.findLikeByAuthor(pseudo).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
       mergeMap((_: Like[]) =>
         !!_
           ? of(_.map((__: Like) => new LikeEntity(__)))
-          : throwError(() => new NotFoundException('post no found')),
+          : throwError(() => new NotFoundException('likes not found')),
       ),
       defaultIfEmpty(undefined),
     );

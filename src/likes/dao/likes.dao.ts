@@ -19,18 +19,43 @@ export class LikesDao {
   ) {}
 
   /**
-   * Returns a list of Like of the list matching authorId in parameter
+   * Returns a list of Like of the list matching pseudo in parameter
    *
-   * @param {string} authorId of the like in db
+   * @param {string} pseudo of the like in db
    *
    * @return {Observable<Like[] | void>}
    */
-  findLikeByAuthorId(authorId: string): Observable<Like[] | void> {
-    return from(this._likeModel.find({ authorId: authorId })).pipe(
+  findLikeByAuthor(pseudo: string): Observable<Like[] | void> {
+    return from(
+      this._likeModel.aggregate([
+        {
+          $lookup: {
+            from: 'posts',
+            localField: 'postId',
+            foreignField: '_id',
+            as: 'post',
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'post.publisherId',
+            foreignField: '_id',
+            as: 'publisher',
+          },
+        },
+        { $match: { 'publisher.pseudo': { $regex: pseudo, $options: 'i' } } },
+        { $unset: ['publisher', 'post'] },
+      ]),
+    );
+
+    /*
+    return from(this._likeModel.find({ authorId: pseudo })).pipe(
       filter((docs: LikeDocument[]) => !!docs && docs.length > 0),
       map((docs: LikeDocument[]) => docs.map((_: LikeDocument) => _.toJSON())),
       defaultIfEmpty(undefined),
     );
+     */
   }
 
   /**

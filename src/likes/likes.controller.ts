@@ -31,6 +31,8 @@ import { JwtAuthGuard } from '../auth/jwt.strategy';
 import { HandlerId } from './validators/handler-id';
 import { handlerPost } from '../comments/validators/handler-post';
 import { HandlerPostIdAndAuthorId } from './validators/handler-postId-and-authorId';
+import { handlerAuthor } from '../comments/validators/handler-author';
+import { HandlerPseudo } from '../posts/validators/handler-pseudo';
 
 @Controller('likes')
 @ApiTags('likes')
@@ -98,33 +100,32 @@ export class LikesController {
   }
 
   /**
-   * Handler to answer to GET /like/from/authorId/:authorId route
+   * Handler to answer to GET /like/from/author/:pseudo route
    *
-   * @param {HandlerPostId} params list of route params to take like authorId
+   * @param {HandlerPseudo} params list of route params to take like pseudo
    *
    * @returns Observable<LikeEntity[]>
    */
   @ApiOkResponse({
-    description: 'Returns an array of comments',
+    description: 'Returns an array of likes',
     type: LikeEntity,
     isArray: true,
   })
   @ApiNoContentResponse({ description: 'No post exists in database' })
   @ApiNotFoundResponse({
-    description:
-      'Like with the given "authorId" doesn\'t exist in the database',
+    description: 'Like with the given "pseudo" doesn\'t exist in the database',
   })
   @ApiParam({
-    name: 'authorId',
-    description: 'Unique identifier of the postId in the database',
+    name: 'pseudo',
+    description: 'Unique identifier of the pseudo in the database',
     type: String,
     allowEmptyValue: false,
   })
-  @Get('from/author/:authorId')
+  @Get('from/author/:pseudo')
   findAllLikesByAuthor(
-    @Param() params: handlerAuthorId,
+    @Param() params: HandlerPseudo,
   ): Observable<LikeEntity[] | void> {
-    return this._likesService.findAllLikebyAuthor(params.authorId);
+    return this._likesService.findAllLikebyAuthor(params.pseudo);
   }
 
   /**
