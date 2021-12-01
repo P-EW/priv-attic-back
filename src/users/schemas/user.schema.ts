@@ -80,18 +80,10 @@ export class User {
   })
   phone: string;
 
-  @Prop(
-    raw({
-      title: {
-        type: String,
-        required: false,
-      },
-      content: {
-        type: String,
-      },
-    }),
-  )
-  motto: any;
+  @Prop({
+    type: String,
+  })
+  motto: string;
 
   @Prop({
     type: String,

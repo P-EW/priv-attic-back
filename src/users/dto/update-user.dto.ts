@@ -106,4 +106,14 @@ export class UpdateUserDto {
   })
   @IsOptional()
   password?: string;
+
+  @ApiProperty({
+    name: 'motto',
+    description: 'motto',
+    example: 'I love coding',
+  })
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  motto?: string;
 }

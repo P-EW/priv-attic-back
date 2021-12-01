@@ -7,10 +7,5 @@ export type User = {
   birthdate: Date;
   phone: string;
   isPrivate: boolean;
-  motto?: Motto[];
-};
-
-export type Motto = {
-  title: string;
-  content?: string;
+  motto?: string;
 };

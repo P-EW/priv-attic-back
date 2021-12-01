@@ -1,6 +1,5 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { UserMottoEntity } from './user-motto.entity';
 import { IsOptional } from 'class-validator';
 @Exclude()
 export class UserEntity {
@@ -89,8 +88,8 @@ export class UserEntity {
   @IsOptional()
   @ApiPropertyOptional({ name: 'motto', description: 'Motto' })
   @Expose()
-  @Type(() => UserMottoEntity)
-  motto?: UserMottoEntity;
+  @Type(() => String)
+  motto?: string;
 
   @Type(() => String)
   password: string;
