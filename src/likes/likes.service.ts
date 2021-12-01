@@ -60,6 +60,26 @@ export class LikesService {
     );
 
   /**
+   * Returns all likes of the list matching authorId in parameter
+   *
+   * @param {string} authorId of the likes
+   *
+   * @returns {Observable<LikeEntity[]>}
+   */
+  findAllLikedbyAuthor = (authorId: string): Observable<LikeEntity[] | void> =>
+    this._likesDao.findLikedByAuthorId(authorId).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: Like[]) =>
+        !!_
+          ? of(_.map((__: Like) => new LikeEntity(__)))
+          : throwError(() => new NotFoundException('post no found')),
+      ),
+      defaultIfEmpty(undefined),
+    );
+
+  /**
    * Check if person already exists and add it in people list
    *
    * @param like to create

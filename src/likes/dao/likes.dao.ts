@@ -51,6 +51,21 @@ export class LikesDao {
   }
 
   /**
+   * Returns a list of Like of the list matching authorId in parameter
+   *
+   * @param {string} authorId of the like in db
+   *
+   * @return {Observable<Like[] | void>}
+   */
+  findLikedByAuthorId(authorId: string): Observable<Like[] | void> {
+    return from(this._likeModel.find({ authorId: authorId })).pipe(
+      filter((docs: LikeDocument[]) => !!docs && docs.length > 0),
+      map((docs: LikeDocument[]) => docs.map((_: LikeDocument) => _.toJSON())),
+      defaultIfEmpty(undefined),
+    );
+  }
+
+  /**
    * Returns a list of Like of the list matching postId in parameter
    *
    * @param {string} postId of the like in db

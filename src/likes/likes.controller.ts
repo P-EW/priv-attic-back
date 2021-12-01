@@ -129,6 +129,36 @@ export class LikesController {
   }
 
   /**
+   * Handler to answer to GET /liked/:authorId route
+   *
+   * @param {HandlerPostId} params list of route params to take like authorId
+   *
+   * @returns Observable<LikeEntity[]>
+   */
+  @ApiOkResponse({
+    description: 'Returns an array of comments',
+    type: LikeEntity,
+    isArray: true,
+  })
+  @ApiNoContentResponse({ description: 'No post exists in database' })
+  @ApiNotFoundResponse({
+    description:
+      'Like with the given "authorId" doesn\'t exist in the database',
+  })
+  @ApiParam({
+    name: 'authorId',
+    description: 'Unique identifier of the postId in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @Get('liked/:authorId')
+  findAllLikedByAuthor(
+    @Param() params: handlerAuthorId,
+  ): Observable<LikeEntity[] | void> {
+    return this._likesService.findAllLikedbyAuthor(params.authorId);
+  }
+
+  /**
    * Handler to answer to DELETE /likes/from/author/:authorId route
    *
    * @param {handlerAuthorId} params list of route params to take like authorId
