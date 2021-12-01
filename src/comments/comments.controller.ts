@@ -166,4 +166,25 @@ export class CommentsController {
   deleteAllCommentByPostId(@Param() params: handlerPost): Observable<void> {
     return this._commentsService.deleteAllCommentByPostId(params.postId);
   }
+
+  @ApiNoContentResponse({
+    description: 'The comments has been successfully deleted',
+  })
+  @ApiNotFoundResponse({
+    description: 'authorId with the given "id" doesn\'t exist in the database',
+  })
+  @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
+  @ApiUnprocessableEntityResponse({
+    description: "The request can't be performed in the database",
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Unique identifier of the post in the database',
+    type: String,
+    allowEmptyValue: false,
+  })
+  @Delete('from/id/:id')
+  deleteOneCommentByID(@Param() params: HandlerId): Observable<void> {
+    return this._commentsService.deleteOneById(params.id);
+  }
 }

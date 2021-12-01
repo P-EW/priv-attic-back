@@ -108,6 +108,22 @@ export class CommentsService {
   }
 
   /**
+   * Deletes Comments in Comments list
+   *
+   * @param {string} id of the author to delete
+   *
+   * @return {Observable<void>}
+   */
+  deleteOneById(id: string): Observable<void> {
+    return this._commentsDao.deleteOneById(id).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap(() => of(undefined)),
+    );
+  }
+
+  /**
    * Add Comment with good data in comments list
    *
    * @param {CreateCommentDto} comment to add

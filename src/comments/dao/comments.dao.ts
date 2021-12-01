@@ -96,4 +96,12 @@ export class CommentsDao {
       defaultIfEmpty(undefined),
     );
   }
+
+  deleteOneById(id: string): Observable<Comment | void> {
+    return from(this._commentModel.findByIdAndRemove(id)).pipe(
+      filter((doc: CommentDocument) => !!doc),
+      map((doc: CommentDocument) => doc.toJSON()),
+      defaultIfEmpty(undefined),
+    );
+  }
 }
