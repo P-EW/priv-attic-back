@@ -48,14 +48,6 @@ export class LikesDao {
         { $unset: ['publisher', 'post'] },
       ]),
     );
-
-    /*
-    return from(this._likeModel.find({ authorId: pseudo })).pipe(
-      filter((docs: LikeDocument[]) => !!docs && docs.length > 0),
-      map((docs: LikeDocument[]) => docs.map((_: LikeDocument) => _.toJSON())),
-      defaultIfEmpty(undefined),
-    );
-     */
   }
 
   /**
