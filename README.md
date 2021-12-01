@@ -91,6 +91,12 @@ cli version              : 8.1.5
 ```
 
 ## Installation
+```bash
+# Clonage du git en repo local
+$ git clone https://github.com/P-EW/priv-attic-back
+# Se rendre dans le dossier du projet
+$ cd priv-attic-back
+```
 Il faut aussi Docker sur votre machine pour la base de donnée.
 ```bash
 $ docker-compose up
@@ -101,10 +107,6 @@ $ docker-compose start
 
 
 ```bash
-# Clonage du git en repo local
-$ git clone https://github.com/P-EW/priv-attic-back
-# Se rendre dans le dossier du projet
-$ cd priv-attic-back
 # installation des dependances au choix :
 $ npm install
 # OU
