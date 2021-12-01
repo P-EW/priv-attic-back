@@ -21,26 +21,46 @@ export class PostsDao {
   ) {}
 
   /**
-   * Call mongoose method, call toJSON on each result and returns PostModel[] or undefined
-   *
-   * @return {Observable<Post[] | void>}
-   */
-  find = (): Observable<Post[] | void> =>
-    from(this._postModel.find({})).pipe(
-      filter((docs: PostDocument[]) => !!docs && docs.length > 0),
-      map((docs: PostDocument[]) => docs.map((_: PostDocument) => _.toJSON())),
-      defaultIfEmpty(undefined),
-    );
-
-  /**
    * Returns every posts of the list matching poseudo in parameter
    *
    * @param {string} pseudo of the post in the db
    *
+   * @param id
    * @return {Observable<Post[] | void>}
    */
-  findPostsByPseudo = (pseudo: string): Observable<Post[] | void> =>
-    from(
+  findPostsByPseudo(pseudo: string, id: string): Observable<Post[] | void> {
+    return from(
+      this._postModel.aggregate([
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'publisherId',
+            foreignField: '_id',
+            as: 'publisher',
+          },
+        },
+        {
+          $match: {
+            $and: [
+              { 'publisher.pseudo': pseudo },
+              {
+                $or: [
+                  { 'publisher._id': new mongoose.Types.ObjectId(id) },
+                  { 'publisher.isPrivate': false },
+                ],
+              },
+            ],
+          },
+        },
+        { $unset: 'publisher' },
+      ]),
+    ).pipe(
+      filter((docs: PostDocument[]) => !!docs && docs.length > 0),
+      map((docs: PostDocument[]) => docs.map((_: PostDocument) => _)),
+      defaultIfEmpty(undefined),
+    );
+  }
+  /*from(
       this._postModel.aggregate([
         {
           $lookup: {
@@ -58,6 +78,8 @@ export class PostsDao {
       map((docs: PostDocument[]) => docs.map((_: PostDocument) => _)),
       defaultIfEmpty(undefined),
     );
+
+     */
 
   /**
    * Returns every posts of the list matching id in parameter and posts public
@@ -99,14 +121,43 @@ export class PostsDao {
    *
    * @param {string} id of the post in the db
    *
+   * @param idToken
    * @return {Observable<Post | void>}
    */
-  findById = (id: string): Observable<Post | void> =>
-    from(this._postModel.findById(id)).pipe(
-      filter((doc: PostDocument) => !!doc),
-      map((doc: PostDocument) => doc.toJSON()),
+  findById(id: string, idToken: string): Observable<Post | void> {
+    console.log(id);
+    console.log(idToken);
+    return from(
+      this._postModel.aggregate([
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'publisherId',
+            foreignField: '_id',
+            as: 'publisher',
+          },
+        },
+        {
+          $match: {
+            $and: [
+              { _id: new mongoose.Types.ObjectId(id) },
+              {
+                $or: [
+                  { 'publisher._id': new mongoose.Types.ObjectId(idToken) },
+                  { 'publisher.isPrivate': false },
+                ],
+              },
+            ],
+          },
+        },
+        { $unset: 'publisher' },
+      ]),
+    ).pipe(
+      filter((docs: PostDocument[]) => !!docs && docs.length > 0),
+      map((docs: PostDocument[]) => docs[0]),
       defaultIfEmpty(undefined),
     );
+  }
 
   /**
    * Returns every posts of the list matching the categories in parameter
@@ -116,23 +167,7 @@ export class PostsDao {
    * @param id
    * @return {Observable<Post[] | void>}
    */
-  // I have to make .tostring().split(',') because mongoose doesn't recognize it as an array
   findByCategs = (categs: string[], id: string): Observable<Post[] | void> =>
-    /* from(
-      this._postModel
-        .find({
-          categories: {
-            $all: categs.toString().split(','),
-          },
-        })
-        .collation({ locale: 'en', strength: 2 }),
-    ).pipe(
-      filter((docs: PostDocument[]) => !!docs && docs.length > 0),
-      map((docs: PostDocument[]) => docs.map((_: PostDocument) => _.toJSON())),
-      defaultIfEmpty(undefined),
-
-    */
-
     from(
       this._postModel.aggregate(
         [

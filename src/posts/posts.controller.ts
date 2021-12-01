@@ -71,8 +71,21 @@ export class PostsController {
   @Get('from/:pseudo')
   findAllPostsFromPseudo(
     @Param() params: HandlerPseudo,
+    @Headers() token: any,
   ): Observable<PostEntity[] | void> {
-    return this._postsService.findAllPostsFromPseudo(params.pseudo);
+    console.log(token);
+    let res;
+    if (
+      token?.authorization === 'Bearer undefined' ||
+      token?.authorization === undefined
+    ) {
+      res = null;
+    } else {
+      const userToken = jwtDecode(token.authorization) as Token;
+      res = userToken.id;
+    }
+
+    return this._postsService.findAllPostsFromPseudo(params.pseudo, res);
   }
 
   /**
@@ -89,7 +102,10 @@ export class PostsController {
   @Get()
   findAll(@Headers() token: any): Observable<PostEntity[] | void> {
     let res;
-    if (token?.authorization === undefined) {
+    if (
+      token?.authorization === 'Bearer undefined' ||
+      token?.authorization === undefined
+    ) {
       res = null;
     } else {
       const userToken = jwtDecode(token.authorization) as Token;
@@ -101,6 +117,7 @@ export class PostsController {
   /**
    * Handler to answer to GET /posts/:id route
    *
+   * @param token
    * @param {HandlerParams} params list of route params to take post id
    *
    * @returns Observable<PostEntity>
@@ -123,8 +140,21 @@ export class PostsController {
     allowEmptyValue: false,
   })
   @Get(':id')
-  findOne(@Param() params: HandlerParams): Observable<PostEntity> {
-    return this._postsService.findOne(params.id);
+  findOne(
+    @Headers() token: any,
+    @Param() params: HandlerParams,
+  ): Observable<PostEntity> {
+    let res;
+    if (
+      token?.authorization === 'Bearer undefined' ||
+      token?.authorization === undefined
+    ) {
+      res = null;
+    } else {
+      const userToken = jwtDecode(token.authorization) as Token;
+      res = userToken.id;
+    }
+    return this._postsService.findOne(params.id, res);
   }
 
   /**
@@ -153,7 +183,10 @@ export class PostsController {
     @Param() params: HandlerCategories,
   ): Observable<PostEntity[] | void> {
     let res;
-    if (token?.authorization === undefined) {
+    if (
+      token?.authorization === 'Bearer undefined' ||
+      token?.authorization === undefined
+    ) {
       res = null;
     } else {
       const userToken = jwtDecode(token.authorization) as Token;

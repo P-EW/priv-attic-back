@@ -21,26 +21,18 @@ export class PostsService {
   constructor(private readonly _postsDao: PostsDao) {}
 
   /**
-   * Returns all existing posts in the list
-   *
-   * @returns {Observable<PostEntity[] | void>}
-   */
-  findAll = (): Observable<PostEntity[] | void> =>
-    this._postsDao.find().pipe(
-      filter((_: Post[]) => !!_),
-      map((_: Post[]) => _.map((__: Post) => new PostEntity(__))),
-      defaultIfEmpty(undefined),
-    );
-
-  /**
    * Returns every posts of the list matching pseudo in parameter
    *
    * @param {string} pseudo of the post
    *
+   * @param id
    * @returns {Observable<PostEntity[]>}
    */
-  findAllPostsFromPseudo = (pseudo: string): Observable<PostEntity[] | void> =>
-    this._postsDao.findPostsByPseudo(pseudo).pipe(
+  findAllPostsFromPseudo = (
+    pseudo: string,
+    id: string,
+  ): Observable<PostEntity[] | void> =>
+    this._postsDao.findPostsByPseudo(pseudo, id).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
@@ -71,10 +63,11 @@ export class PostsService {
    *
    * @param {string} id of the post
    *
+   * @param idToken
    * @returns {Observable<PostEntity>}
    */
-  findOne = (id: string): Observable<PostEntity> =>
-    this._postsDao.findById(id).pipe(
+  findOne = (id: string, idToken: string): Observable<PostEntity> =>
+    this._postsDao.findById(id, idToken).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
