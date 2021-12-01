@@ -39,6 +39,28 @@ export class CommentsService {
     );
 
   /**
+   * Returns every posts of the list matching pseudo in parameter
+   *
+   * @param {string} authorId of the post
+   *
+   * @returns {Observable<CommentEntity[]>}
+   */
+  findAllCommentbyAuthor = (
+    authorId: string,
+  ): Observable<CommentEntity[] | void> =>
+    this._commentsDao.findCommentsByAuthor(authorId).pipe(
+      catchError((e) =>
+        throwError(() => new UnprocessableEntityException(e.message)),
+      ),
+      mergeMap((_: Comment[]) =>
+        !!_
+          ? of(_.map((__: Comment) => new CommentEntity(__)))
+          : throwError(() => new NotFoundException('post no found')),
+      ),
+      defaultIfEmpty(undefined),
+    );
+
+  /**
    * Check if post already exists and add it in posts list
    *
    * @param comment to create
