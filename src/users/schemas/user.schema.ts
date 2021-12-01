@@ -87,7 +87,6 @@ export class User {
 
   @Prop({
     type: String,
-    required: true,
   })
   password: string;
 }
