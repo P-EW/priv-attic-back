@@ -9,6 +9,7 @@ import {
   Patch,
   UseInterceptors,
   UseGuards,
+  Headers,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -33,7 +34,8 @@ import { HandlerPseudo } from './validators/handler-pseudo';
 import { HandlerCategories } from './validators/handler-categories';
 import { JwtAuthGuard } from '../auth/jwt.strategy';
 import { HandlerPublisher } from './validators/handler-publisher';
-import { HandlerPublisherIdAndNull } from './validators/handler-publisherId-and-null';
+import { Token } from '../auth/constants';
+import jwtDecode from 'jwt-decode';
 
 @Controller('posts')
 @ApiTags('posts')
@@ -100,17 +102,18 @@ export class PostsController {
     isArray: true,
   })
   @ApiNoContentResponse({ description: 'No post exists in database' })
-  @ApiParam({
-    name: 'publisherId',
-    description: 'Unique identifier of the user in the database',
-    type: String,
-    allowEmptyValue: false,
-  })
-  @Get('from/id/:publisherId')
+  @Get('from/id/public/')
   findAllPostsFromPublicAndId(
-    @Param() params: HandlerPublisher,
+    @Headers() token: any,
   ): Observable<PostEntity[] | void> {
-    return this._postsService.findAllPostsFromPublicAndId(params.publisherId);
+    let res;
+    if (token?.authorization === undefined) {
+      res = null;
+    } else {
+      const userToken = jwtDecode(token.authorization) as Token;
+      res = userToken.id;
+    }
+    return this._postsService.findAllPostsFromPublicAndId(res);
   }
 
   /**

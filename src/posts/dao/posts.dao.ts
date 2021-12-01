@@ -6,7 +6,6 @@ import { defaultIfEmpty, from, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { UpdatePostDto } from '../dto/update-post.dto';
-import { strict } from 'assert';
 import * as mongoose from 'mongoose';
 
 @Injectable()
@@ -60,8 +59,12 @@ export class PostsDao {
       defaultIfEmpty(undefined),
     );
 
+  /**
+   * Returns every posts of the list matching id in parameter and posts public
+   *
+   * @param id
+   */
   findPostsPublicAndById(id: string): Observable<Post[] | void> {
-    console.log(id);
     return from(
       this._postModel.aggregate([
         {

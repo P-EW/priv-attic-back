@@ -32,6 +32,7 @@
     "config": "^3.3.6",
     "fastify-file-interceptor": "^1.0.6",
     "fastify-swagger": "^4.12.6",
+    "jwt-decode": "^3.1.2",
     "observable-to-promise": "^1.0.0",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
