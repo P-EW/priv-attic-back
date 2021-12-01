@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiNoContentResponse,
@@ -63,6 +64,7 @@ export class CommentsController {
   })
   @Post()
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   create(
     @Body() createCommentDto: CreateCommentDto,
   ): Observable<CommentEntity> {
@@ -141,6 +143,8 @@ export class CommentsController {
     type: String,
     allowEmptyValue: false,
   })
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   @Delete('from/author/:authorId')
   deleteAllCommentByAuthorID(@Param() params: handlerAuthor): Observable<void> {
     return this._commentsService.deleteAllCommentByAuthorId(params.authorId);
@@ -163,6 +167,8 @@ export class CommentsController {
     allowEmptyValue: false,
   })
   @Delete('from/postId/:postId')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   deleteAllCommentByPostId(@Param() params: handlerPost): Observable<void> {
     return this._commentsService.deleteAllCommentByPostId(params.postId);
   }
@@ -184,6 +190,8 @@ export class CommentsController {
     allowEmptyValue: false,
   })
   @Delete('from/id/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   deleteOneCommentByID(@Param() params: HandlerId): Observable<void> {
     return this._commentsService.deleteOneById(params.id);
   }

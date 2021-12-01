@@ -22,7 +22,7 @@ export class LikesService {
   /**
    * Returns all likes of the list matching postId in parameter
    *
-   * @param {string} postId of the likes
+   * @param {string} postId of post
    *
    * @returns {Observable<LikeEntity[]>}
    */
@@ -42,7 +42,7 @@ export class LikesService {
   /**
    * Returns all likes of the list matching pseudo in parameter
    *
-   * @param {string} pseudo of the likes
+   * @param {string} pseudo of pseudo
    *
    * @returns {Observable<LikeEntity[]>}
    */
@@ -62,7 +62,7 @@ export class LikesService {
   /**
    * Returns all likes of the list matching authorId in parameter
    *
-   * @param {string} authorId of the likes
+   * @param {string} authorId of author
    *
    * @returns {Observable<LikeEntity[]>}
    */
@@ -99,7 +99,7 @@ export class LikesService {
   /**
    * Deletes likes in likes list
    *
-   * @param {string} id of the author to delete
+   * @param {string} id of the author
    *
    * @return {Observable<void>}
    */
@@ -114,7 +114,7 @@ export class LikesService {
   /**
    * Deletes likes in likes list
    *
-   * @param {string} id of the post to delete
+   * @param {string} id of the post
    *
    * @return {Observable<void>}
    */
@@ -128,9 +128,9 @@ export class LikesService {
   }
 
   /**
-   * Deletes one like in likes list
+   * Delete one like in likes list
    *
-   * @param {string} id of the like to delete
+   * @param {string} id of the like
    *
    * @return {Observable<void>}
    */
@@ -147,7 +147,11 @@ export class LikesService {
             ),
       ),
     );
-
+  /**
+   * delete like of a post and author
+   * @param postId of post
+   * @param authorId of author
+   */
   deleteByPostAndAuthor = (
     postId: string,
     authorId: string,
@@ -168,6 +172,11 @@ export class LikesService {
       ),
     );
 
+  /**
+   * return true if author like the post
+   * @param postId of post
+   * @param authorId of user
+   */
   getByPostAndAuthor = (
     postId: string,
     authorId: string,

@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 import { HandlerParams } from './validators/handler-params';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiBody,
   ApiConflictResponse,
   ApiNoContentResponse,
@@ -137,6 +138,7 @@ export class UsersController {
   })
   @Delete(':pseudo')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   delete(@Param() params: HandlerParams): Observable<void> {
     return this._userService.delete(params.pseudo);
   }
@@ -172,7 +174,8 @@ export class UsersController {
     allowEmptyValue: false,
   })
   @ApiBody({ description: 'Payload to update a user', type: UpdateUserDto })
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   @Patch(':pseudo')
   update(
     @Param() params: HandlerParams,

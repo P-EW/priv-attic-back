@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 
 export type UserDocument = User & Document;
@@ -91,7 +91,4 @@ export class User {
   password: string;
 }
 
-/**
- *
- */
 export const UserSchema = SchemaFactory.createForClass(User);

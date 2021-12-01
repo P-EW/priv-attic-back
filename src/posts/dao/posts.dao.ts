@@ -21,11 +21,11 @@ export class PostsDao {
   ) {}
 
   /**
-   * Returns every posts of the list matching poseudo in parameter
+   * Returns every posts of the list matching pseudo in parameter
    *
    * @param {string} pseudo of the post in the db
    *
-   * @param id
+   * @param id of user
    * @return {Observable<Post[] | void>}
    */
   findPostsByPseudo(pseudo: string, id: string): Observable<Post[] | void> {
@@ -60,31 +60,11 @@ export class PostsDao {
       defaultIfEmpty(undefined),
     );
   }
-  /*from(
-      this._postModel.aggregate([
-        {
-          $lookup: {
-            from: 'users',
-            localField: 'publisherId',
-            foreignField: '_id',
-            as: 'publisher',
-          },
-        },
-        { $match: { 'publisher.pseudo': { $regex: pseudo, $options: 'i' } } },
-        { $unset: 'publisher' },
-      ]),
-    ).pipe(
-      filter((docs: PostDocument[]) => !!docs && docs.length > 0),
-      map((docs: PostDocument[]) => docs.map((_: PostDocument) => _)),
-      defaultIfEmpty(undefined),
-    );
-
-     */
 
   /**
    * Returns every posts of the list matching id in parameter and posts public
    *
-   * @param id
+   * @param id of publisher
    */
   findPostsPublicAndById(id: string): Observable<Post[] | void> {
     return from(
@@ -121,7 +101,8 @@ export class PostsDao {
    *
    * @param {string} id of the post in the db
    *
-   * @param idToken
+   * @param idToken of token
+   *
    * @return {Observable<Post | void>}
    */
   findById(id: string, idToken: string): Observable<Post | void> {
@@ -164,7 +145,7 @@ export class PostsDao {
    *
    * @param {string[]} categs of the post in the db
    *
-   * @param id
+   * @param id of token
    * @return {Observable<Post[] | void>}
    */
   findByCategs = (categs: string[], id: string): Observable<Post[] | void> =>

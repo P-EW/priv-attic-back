@@ -30,7 +30,7 @@ export class AuthController {
   /**
    * Handler to answer to POST /login route
    *
-   * @param {string}user data to create a token
+   * @param {string} user data to create a token
    *
    * @return {Observable<TokenEntity | void>}
    */

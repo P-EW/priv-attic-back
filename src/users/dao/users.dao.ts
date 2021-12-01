@@ -53,6 +53,7 @@ export class UsersDao {
 
   /**
    *  Check if user already exists with index and add it in users list
+   *
    * @param {CreateUserDto } user to create
    *
    * @return {Observable<User>}
@@ -64,7 +65,9 @@ export class UsersDao {
 
   /**
    *  Delete a user in users list
-   *  @param {string} pseudo
+   *
+   *  @param {string} pseudo of pseudo
+   *
    *  @return {Observable<User | void>}
    */
   findByPseudoAndRemove(pseudo: string): Observable<User | void> {
@@ -80,9 +83,11 @@ export class UsersDao {
   }
 
   /**
-   * Update a user in users lsit
-   * @param {string} pseudo
-   * @param {UpdateUserDto} user
+   * Update a user in users list
+   *
+   * @param {string} pseudo of pseudo
+   *
+   * @param {UpdateUserDto} user of user
    *
    * @returns  {Observable<User | void>}
    */

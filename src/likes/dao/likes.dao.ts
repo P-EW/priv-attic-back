@@ -55,7 +55,7 @@ export class LikesDao {
    *
    * @param {string} authorId of the like in db
    *
-   * @return {Observable<Like[] | void>}
+   * @returns {Observable<Like[] | void>}
    */
   findLikedByAuthorId(authorId: string): Observable<Like[] | void> {
     return from(this._likeModel.find({ authorId: authorId })).pipe(
@@ -70,7 +70,7 @@ export class LikesDao {
    *
    * @param {string} postId of the like in db
    *
-   * @return {Observable<Like[] | void>}
+   * @returns {Observable<Like[] | void>}
    */
   findLikeByPostId(postId: string): Observable<Like[] | void> {
     return from(this._likeModel.find({ postId: postId })).pipe(
@@ -96,7 +96,7 @@ export class LikesDao {
   /**
    * Delete all likes of a authorId  in likes list
    *
-   * @param {string} id
+   * @param {string} id of author
    *
    * @return {Observable<Like | void>}
    */
@@ -110,7 +110,7 @@ export class LikesDao {
   /**
    * Delete all likes of a postId  in likes list
    *
-   * @param {string} id
+   * @param {string} id of post
    *
    * @return {Observable<Like | void>}
    */
@@ -125,7 +125,7 @@ export class LikesDao {
   /**
    * Delete a like in likes list
    *
-   * @param {string} id
+   * @param {string} id of like
    *
    * @return {Observable<Like | void>}
    */
@@ -136,6 +136,11 @@ export class LikesDao {
       defaultIfEmpty(undefined),
     );
 
+  /**
+   * get like of a author and post
+   * @param postId of post
+   * @param authorId of author
+   */
   findByPostAndAuthorIDAndRemove = (
     postId: string,
     authorId: string,
@@ -151,6 +156,11 @@ export class LikesDao {
       defaultIfEmpty(undefined),
     );
 
+  /**
+   * Returns true if the post is liked by a user
+   * @param postId of post
+   * @param authorId of user
+   */
   findByPostAndAuthor = (
     postId: string,
     authorId: string,
@@ -167,8 +177,9 @@ export class LikesDao {
     );
 
   /**
-   * Get
-   * @param idPost
+   * Get the number of like of a given post
+   *
+   * @param idPost of post
    */
   findNbLikesByPostId = (idPost: string): Observable<number | void> =>
     from(this._likeModel.countDocuments({ postId: idPost })).pipe(

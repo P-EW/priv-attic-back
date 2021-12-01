@@ -6,33 +6,33 @@ server:
     - "http://127.0.0.1:4200"
     - "http://localhost:4200"
 swaggerUsers:
-  title: New Web's Technologies project with NestJS
-  description: Users
+  title: Priv'Attic public API
+  description: The Users API description
   version: 1.0
   tag: users
   path: documentation
 swaggerPosts:
-  title: New Web's Technologies project with NestJS
-  description: Posts
+  title: Priv'Attic public API
+  description: The Posts API description
   version: 1.0
   tag: posts
   path: documentation
 swaggerAuth:
-  title: New Web's Technologies project with NestJS
-  description: Authentification
+  title: Priv'Attic public API
+  description: The Authentification API description
   version: 1.0
   tag: auth
   path: documentation
 swaggerComments:
-  title: New Web's Technologies project with NestJS
-  description: Comments
+  title: Priv'Attic public API
+  description: The Comments API description
   version: 1.0
   tag: comments
   path: documentation
 
 swaggerLikes:
-  title: New Web's Technologies project with NestJS
-  description: Authentification
+  title: Priv'Attic public API
+  description: The Likes API description
   version: 1.0
   tag: likes
   path: documentation

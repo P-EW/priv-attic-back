@@ -103,8 +103,8 @@ export class UsersService {
   /**
    * Update a user in users list
    *
-   * @param {string} pseudo
-   * @param {string} user
+   * @param {string} pseudo of user
+   * @param {UpdateUserDto} user
    *
    * @return {Observable<UserEntity | void>}
    */
@@ -138,9 +138,9 @@ export class UsersService {
   /**
    * Create a password hashed
    *
-   * @param pth
+   * @param pw
    */
-  hashPassWord(pth: string): any {
-    return { password: bcrypt.hashSync(pth, 10) };
+  hashPassWord(pw: string): any {
+    return { password: bcrypt.hashSync(pw, 10) };
   }
 }

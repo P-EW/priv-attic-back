@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -215,7 +216,8 @@ export class PostsController {
     type: CreatePostDto,
   })
   @Post()
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   create(@Body() createPostDto: CreatePostDto): Observable<PostEntity> {
     return this._postsService.create(createPostDto);
   }
@@ -253,6 +255,7 @@ export class PostsController {
   @ApiBody({ description: 'Payload to update a person', type: UpdatePostDto })
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   update(
     @Param() params: HandlerParams,
     @Body() updatePostDto: UpdatePostDto,
@@ -285,6 +288,7 @@ export class PostsController {
   })
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   delete(@Param() params: HandlerParams): Observable<void> {
     return this._postsService.delete(params.id);
   }
@@ -306,6 +310,8 @@ export class PostsController {
     allowEmptyValue: false,
   })
   @Delete('from/:publisherId')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   deleteAllCommentByID(@Param() params: HandlerPublisher): Observable<void> {
     return this._postsService.deleteAllPostById(params.publisherId);
   }

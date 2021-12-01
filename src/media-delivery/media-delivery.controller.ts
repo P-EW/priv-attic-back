@@ -39,6 +39,11 @@ export class MediaDeliveryController {
     private readonly _postsService: PostsService,
   ) {}
 
+  /**
+   * upload a profil picture of user
+   * @param file  to upload
+   * @param params of pseudo of user
+   */
   @ApiConsumes('multipart/form-data')
   @Post('user/:pseudo')
   @UseInterceptors(
@@ -75,6 +80,11 @@ export class MediaDeliveryController {
     }
   }
 
+  /**
+   * upload a picture of post
+   * @param file  to upload
+   * @param params of post
+   */
   @ApiConsumes('multipart/form-data')
   @Post('post/:id')
   @UseInterceptors(
@@ -111,6 +121,10 @@ export class MediaDeliveryController {
     }
   }
 
+  /**
+   * get file from name
+   * @param params name of file
+   */
   @Get(':filename')
   getFile(@Param() params: HandlerFilename): StreamableFile {
     const file = createReadStream(

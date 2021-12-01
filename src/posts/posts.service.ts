@@ -25,7 +25,7 @@ export class PostsService {
    *
    * @param {string} pseudo of the post
    *
-   * @param id
+   * @param id of token
    * @returns {Observable<PostEntity[]>}
    */
   findAllPostsFromPseudo = (
@@ -49,7 +49,8 @@ export class PostsService {
 
   /**
    * Returns every posts of the list matching id in parameter and posts public
-   * @param id
+   *
+   * @param id of token
    */
   findAllPostsFromPublicAndId = (id: string): Observable<PostEntity[] | void> =>
     this._postsDao.findPostsPublicAndById(id).pipe(
@@ -63,7 +64,8 @@ export class PostsService {
    *
    * @param {string} id of the post
    *
-   * @param idToken
+   * @param idToken of token
+   *
    * @returns {Observable<PostEntity>}
    */
   findOne = (id: string, idToken: string): Observable<PostEntity> =>
@@ -85,7 +87,8 @@ export class PostsService {
    *
    * @param {string[]} categs of the post
    *
-   * @param id
+   * @param id of token
+   *
    * @returns {Observable<PostEntity[]>}
    */
   findAllPostsFromCategs = (

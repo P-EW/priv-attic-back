@@ -22,6 +22,7 @@ export class CommentsDao {
    * Call moogoose method, call toJson on each result and returns CommentModel[] or undefined
    *
    * @param {string} postId of the comment in the db
+   *
    * @return {Observable<Comment[] | void>}
    */
   findCommentsByPost(postId: string): Observable<Comment[] | void> {
@@ -35,9 +36,10 @@ export class CommentsDao {
   }
 
   /**
-   * Call moogoose method, call toJson on each result and returns CommentModel[] or undefined
+   * Call moogoose method, call toJson on each result by author and returns CommentModel[] or undefined
    *
    * @param {string} authorId of the comment in the db
+   *
    * @return {Observable<Comment[] | void>}
    */
   findCommentsByAuthor(authorId: string): Observable<Comment[] | void> {
@@ -64,9 +66,9 @@ export class CommentsDao {
   }
 
   /**
-   * Delete all comments of a authorId  in comments list
+   * Delete all comments of a author in comments list
    *
-   * @param {string} id
+   * @param {string} id of author
    *
    * @return {Observable<Comment | void>}
    */
@@ -97,6 +99,13 @@ export class CommentsDao {
     );
   }
 
+  /**
+   * Delete a comment of a user in comments list
+   *
+   * @param {string} id of comment
+   *
+   * @return {Observable<Comment | void>}
+   */
   deleteOneById(id: string): Observable<Comment | void> {
     return from(this._commentModel.findByIdAndRemove(id)).pipe(
       filter((doc: CommentDocument) => !!doc),

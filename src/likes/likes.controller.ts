@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiNoContentResponse,
@@ -31,7 +32,6 @@ import { JwtAuthGuard } from '../auth/jwt.strategy';
 import { HandlerId } from './validators/handler-id';
 import { handlerPost } from '../comments/validators/handler-post';
 import { HandlerPostIdAndAuthorId } from './validators/handler-postId-and-authorId';
-import { handlerAuthor } from '../comments/validators/handler-author';
 import { HandlerPseudo } from '../posts/validators/handler-pseudo';
 
 @Controller('likes')
@@ -65,7 +65,8 @@ export class LikesController {
     type: CreateLikeDto,
   })
   @Post()
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   create(@Body() createLikeDto: CreateLikeDto): Observable<LikeEntity> {
     return this._likesService.create(createLikeDto);
   }
@@ -183,6 +184,8 @@ export class LikesController {
     allowEmptyValue: false,
   })
   @Delete('from/author/:authorId')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   deleteAllCommentByAuthorID(
     @Param() params: handlerAuthorId,
   ): Observable<void> {
@@ -213,6 +216,8 @@ export class LikesController {
     allowEmptyValue: false,
   })
   @Delete('from/post/:postId')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   deleteAllCommentByPostId(@Param() params: HandlerPostId): Observable<void> {
     return this._likesService.deleteAllLikeByPostId(params.postId);
   }
@@ -241,7 +246,8 @@ export class LikesController {
     allowEmptyValue: false,
   })
   @Delete(':id')
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   delete(@Param() params: HandlerId): Observable<void> {
     return this._likesService.delete(params.id);
   }
@@ -266,6 +272,8 @@ export class LikesController {
     allowEmptyValue: false,
   })
   @Delete('from/:postId/:authorId')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   deleteByPostAndAuthor(@Param() params: HandlerPostIdAndAuthorId) {
     return this._likesService.deleteByPostAndAuthor(
       params.postId,

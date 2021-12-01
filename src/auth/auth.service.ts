@@ -21,7 +21,7 @@ export class AuthService {
 
   /**
    * Returns one User
-   * @param connectUser user to validate user
+   * @param {ConnectUserDto} connectUser to validate user
    *
    * @returns {Observable<UserEntity>}
    */
@@ -65,6 +65,7 @@ export class AuthService {
 
   /**
    * Check if user exists and create token
+   *
    * @param {ConnectUserDto} user to login
    *
    * @returns {Observable< Token | void>}

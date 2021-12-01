@@ -19,7 +19,7 @@ export class CommentsService {
   constructor(private readonly _commentsDao: CommentsDao) {}
 
   /**
-   * Returns every posts of the list matching pseudo in parameter
+   * Returns every comments of the list matching postId in parameter
    *
    * @param {string} postId of the post
    *
@@ -39,7 +39,7 @@ export class CommentsService {
     );
 
   /**
-   * Returns every posts of the list matching pseudo in parameter
+   * Returns every comments of the list matching authorId in parameter
    *
    * @param {string} authorId of the post
    *
@@ -61,7 +61,7 @@ export class CommentsService {
     );
 
   /**
-   * Check if post already exists and add it in posts list
+   * Check if comment already exists and add it in comments list
    *
    * @param comment to create
    *
@@ -108,7 +108,7 @@ export class CommentsService {
   }
 
   /**
-   * Deletes Comments in Comments list
+   * Deletes comment in Comments list
    *
    * @param {string} id of the author to delete
    *
@@ -124,7 +124,7 @@ export class CommentsService {
   }
 
   /**
-   * Add Comment with good data in comments list
+   * Add comment with good data in comments list
    *
    * @param {CreateCommentDto} comment to add
    *
