@@ -6,6 +6,7 @@ import { defaultIfEmpty, from, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { UpdatePostDto } from '../dto/update-post.dto';
+import * as mongoose from 'mongoose';
 
 @Injectable()
 export class PostsDao {
@@ -57,6 +58,41 @@ export class PostsDao {
       map((docs: PostDocument[]) => docs.map((_: PostDocument) => _)),
       defaultIfEmpty(undefined),
     );
+
+  /**
+   * Returns every posts of the list matching id in parameter and posts public
+   *
+   * @param id
+   */
+  findPostsPublicAndById(id: string): Observable<Post[] | void> {
+    return from(
+      this._postModel.aggregate([
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'publisherId',
+            foreignField: '_id',
+            as: 'publisher',
+          },
+        },
+        {
+          $match: {
+            $or: [
+              { 'publisher._id': new mongoose.Types.ObjectId(id) },
+              { 'publisher.isPrivate': false },
+            ],
+          },
+        },
+        { $unset: 'publisher' },
+      ]),
+    ).pipe(
+      filter((docs: PostDocument[]) => !!docs && docs.length > 0),
+
+      map((docs: PostDocument[]) => docs.map((_: PostDocument) => _)),
+
+      defaultIfEmpty(undefined),
+    );
+  }
 
   /**
    * Returns one post of the list matching id in parameter

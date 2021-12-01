@@ -9,6 +9,7 @@ import {
   Patch,
   UseInterceptors,
   UseGuards,
+  Headers,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -33,6 +34,8 @@ import { HandlerPseudo } from './validators/handler-pseudo';
 import { HandlerCategories } from './validators/handler-categories';
 import { JwtAuthGuard } from '../auth/jwt.strategy';
 import { HandlerPublisher } from './validators/handler-publisher';
+import { Token } from '../auth/constants';
+import jwtDecode from 'jwt-decode';
 
 @Controller('posts')
 @ApiTags('posts')
@@ -86,6 +89,31 @@ export class PostsController {
     @Param() params: HandlerPseudo,
   ): Observable<PostEntity[] | void> {
     return this._postsService.findAllPostsFromPseudo(params.pseudo);
+  }
+
+  /**
+   * Handler to answer to GET /posts route
+   *
+   * @returns Observable<PostEntity[] | void>
+   */
+  @ApiOkResponse({
+    description: 'Returns an array of posts',
+    type: PostEntity,
+    isArray: true,
+  })
+  @ApiNoContentResponse({ description: 'No post exists in database' })
+  @Get('from/id/public/')
+  findAllPostsFromPublicAndId(
+    @Headers() token: any,
+  ): Observable<PostEntity[] | void> {
+    let res;
+    if (token?.authorization === undefined) {
+      res = null;
+    } else {
+      const userToken = jwtDecode(token.authorization) as Token;
+      res = userToken.id;
+    }
+    return this._postsService.findAllPostsFromPublicAndId(res);
   }
 
   /**
