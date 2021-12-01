@@ -37,4 +37,4 @@ swaggerLikes:
   tag: likes
   path: documentation
 mongodb:
-  uri: mongodb://localhost:27017/nwt
+  uri: mongodb://localhost:27017/priv_attic

@@ -1,73 +1,118 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# Priv'Attic : Back-End
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+⚠️ | This application is unsecure, deploy at your own risks.
+:---: | :---
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Priv'Attic
 
-## Description
+Priv'Attic est un réseau social permettant de partager un peu de texte ou des images.
+Réalisé en 5 jours dans le cadre de l'UE "Nouvelles technologies du web" par :
+- Ambrozik Hugo
+- Watelot Paul-Emile
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+
+## End-Points
+Les end-points dans le back-end sont les suivantes et disponibles dans le Swagger (il faut avoir lancé le projet pour que les liens soient fonctionnels) :
+(🔒 route nécessitant d'être authentifié)
+- [http://localhost:3000/documentation/auth](http://localhost:3000/documentation/auth)
+  - Se connecter
+- [http://localhost:3000/documentation/users](http://localhost:3000/documentation/users)
+  - Créer un Compte
+  - 🔒 Modifier son Compte
+  - 🔒 Supprimer son Compte
+  - Récupérer un Compte par le pseudo ou par l'id
+- [http://localhost:3000/documentation/posts](http://localhost:3000/documentation/posts)
+  - Récupérer tous les Posts avec le pseudo d'un utilisateur
+  - Récupérer tous les Posts publics
+  - Récupérer tous les Posts publics par [catégories]
+  - Récupérer un Post par son id
+  - 🔒 Créer un Post
+  - 🔒 Modifier un Post par son id
+  - 🔒 Supprimer un Post par son id
+  - 🔒 Supprimer tous les Posts d'un utilisateur
+- [http://localhost:3000/documentation/comments](http://localhost:3000/documentation/comments)
+  - 🔒 Publier un Commentaire
+  - 🔒 Supprimer tous ses Commentaires
+  - 🔒 Supprimer tous les Commentaires d'un Post
+  - 🔒 Supprimer un Commentaire par son id
+  - Récupérer les Commentaires d'un Post via son id
+  - Récupérer les Commentaires d'un Utilisateur par son id
+- [http://localhost:3000/documentation/likes](http://localhost:3000/documentation/likes)
+  - 🔒 Ajouter un Like
+  - 🔒 Supprimer son Like
+  - 🔒 Supprimer tous les Likes d'un Post
+  - 🔒 Supprimer tous les Likes d'un Utilisateur
+  - 🔒 Supprimer un Like par son id
+  - Récupérer le nombre de Likes d'un Post
+  - Récupérer le nombre de Likes qu'a reçu un Utilisateur
+  - Savoir si un Utilisateur a Liké un Post
+  - Récupérer la liste des Likes d'un Utilisateur
+  - Récupérer la liste des Likes d'un Post
+
+Un compte peut être "public" ou "privé, si il est privé, seul son propriétaire peut voir ses posts.
+
+L'application utilise des Tokens JWT pour l'authentification.
+
+## Installation du projet
+- Télécharger, installer et lancer la partie [back end](https://github.com/P-EW/priv-attic-back) (ici)
+- Télécharger, installer et lancer la partie [front end](https://github.com/P-EW/priv-attic-front)
+
+## Dépendances :
+
+```bash
+ _   _             _      ___  _____  _____  _     _____
+| \ | |           | |    |_  |/  ___|/  __ \| |   |_   _|
+|  \| |  ___  ___ | |_     | |\ `--. | /  \/| |     | |
+| . ` | / _ \/ __|| __|    | | `--. \| |    | |     | |
+| |\  ||  __/\__ \| |_ /\__/ //\__/ /| \__/\| |_____| |_
+\_| \_/ \___||___/ \__|\____/ \____/  \____/\_____/\___/
+
+
+[System Information]
+OS Version     : Windows 10
+NodeJS Version : v16.10.0
+NPM Version    : 8.1.1
+
+[Nest CLI]
+Nest CLI Version : 8.1.5
+
+[Nest Platform Information]
+platform-express version : 8.2.3
+platform-fastify version : 8.2.3
+schematics version       : 8.0.5
+mongoose version         : 9.0.1
+passport version         : 8.0.1
+swagger version          : 5.1.5
+testing version          : 8.2.3
+common version           : 8.2.3
+core version             : 8.2.3
+jwt version              : 8.0.0
+cli version              : 8.1.5
+```
 
 ## Installation
+Il faut aussi Docker sur votre machine pour la base de donnée.
+```bash
+$ docker-compose up
+$ docker-compose start
+```
+- Créer la base de donnée "priv_attic"
+- Ajouter les données/indexes dans le [script](https://github.com/P-EW/priv-attic-back/blob/master/scripts/init.mongo.js). (lancer dans votre console mongo)
+
 
 ```bash
+# Clonage du git en repo local
+$ git clone https://github.com/P-EW/priv-attic-back
+# Se rendre dans le dossier du projet
+$ cd priv-attic-back
+# installation des dependances au choix :
 $ npm install
+# OU
+$ yarn install
+# Lancer le projet
+$ nest start
 ```
+- La documentation Swagger est maintenant accessible dans les liens plus haut.
 
-## Running the app
+Si vous avez lancé le front, le projet est accessible et entièrement fonctionnel à l'adresse suivante : [http://localhost:4200/](http://localhost:4200/)
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
