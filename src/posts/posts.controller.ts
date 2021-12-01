@@ -59,22 +59,6 @@ export class PostsController {
     isArray: true,
   })
   @ApiNoContentResponse({ description: 'No post exists in database' })
-  @Get()
-  findAll(): Observable<PostEntity[] | void> {
-    return this._postsService.findAll();
-  }
-
-  /**
-   * Handler to answer to GET /posts route
-   *
-   * @returns Observable<PostEntity[] | void>
-   */
-  @ApiOkResponse({
-    description: 'Returns an array of posts',
-    type: PostEntity,
-    isArray: true,
-  })
-  @ApiNoContentResponse({ description: 'No post exists in database' })
   @ApiNotFoundResponse({
     description: 'Post with the given "pseudo" doesn\'t exist in the database',
   })
@@ -102,10 +86,8 @@ export class PostsController {
     isArray: true,
   })
   @ApiNoContentResponse({ description: 'No post exists in database' })
-  @Get('from/id/public/')
-  findAllPostsFromPublicAndId(
-    @Headers() token: any,
-  ): Observable<PostEntity[] | void> {
+  @Get()
+  findAll(@Headers() token: any): Observable<PostEntity[] | void> {
     let res;
     if (token?.authorization === undefined) {
       res = null;
